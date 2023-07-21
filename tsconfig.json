@@ -1,37 +1,29 @@
 {
   "compilerOptions": {
+    "target": "es2018",
+    "outDir": "dist",
+    "lib": ["dom", "dom.iterable", "esnext", "esnext.asynciterable"],
+    "declaration": true,
+    "declarationDir": "types",
     "allowJs": true,
-    "baseUrl": ".",
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "noEmit": true,
+    "sourceMap": true,
     "skipLibCheck": true,
-    "strict": true,
-    "paths": {
-      "@/*": [
-        "*"
-      ]
-    },
-    "target": "es2020",
-    "jsx": "preserve",
-    "resolveJsonModule": true,
     "esModuleInterop": true,
-    "incremental": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
     "module": "esnext",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "emitDeclarationOnly": true,
+    "baseUrl": "./",
+    "paths": {
+      "@subgraph/*": ["./src/subgraph/*"],
+      "@businessLogic/*": ["./src/business-logic/*"]
+    }
   },
-  "include": [
-    "components/**/*",
-    "types.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/**/*", "assets/**/*", "declaration.d.ts", "next-env.d.ts"],
+  "exclude": ["node_modules", "lib", "dist"]
 }

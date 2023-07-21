@@ -1,5 +1,5 @@
-import { MetadataColumn } from '@/types/kleros/types'
-import { BackendFileResponse, BackendFileUpload } from '@/types/utils'
+import { MetadataColumn } from '../../business-logic/kleros/types'
+import { BackendFileResponse, BackendFileUpload } from '../../business-logic/utils'
 
 export type KlerosListStructure = {
   name: string

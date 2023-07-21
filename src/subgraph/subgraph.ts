@@ -1,9 +1,9 @@
 import { GraphQLClient } from 'graphql-request'
 import nullthrows from 'nullthrows'
 
-import endpoints from '@/src/subgraph/subgraph-endpoints.json'
-import { ChainsValues } from '@/types/chains'
-import { SdkWithHooks, getSdkWithHooks } from '@/types/generated/subgraph'
+import endpoints from '@subgraph/subgraph-endpoints.json'
+import { ChainsValues } from '@businessLogic/chains'
+import { SdkWithHooks, getSdkWithHooks } from '@subgraph/generated/subgraph'
 
 export type AllSDK = Record<ChainsValues, SdkWithHooks>
 

@@ -6,22 +6,17 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
 # production
 /build
 
 # misc
 .DS_Store
 *.d.ts
-.eslintrc.js
+.eslintrc.cjs
 .eslintignore
 .prettierrc.js
 .prettierignore
 tsconfig.json
-next.config.js
 
 # debug
 npm-debug.log*

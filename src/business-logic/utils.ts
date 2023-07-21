@@ -1,9 +1,7 @@
-import type { DetailedHTMLProps, HTMLAttributes } from 'react'
+// import type { DetailedHTMLProps, HTMLAttributes } from 'react'
 
 import { Contract } from '@ethersproject/contracts'
 import { KeyedMutator } from 'swr'
-
-import { ChainsValues } from '@/types/chains'
 
 export type ObjectValues<T> = T[keyof T]
 
@@ -50,28 +48,18 @@ export const RPCProvidersENV: Record<RPCProviders, any> = {
 
 export const isGitHubActionBuild = process.env.IS_GH_ACTION === 'true'
 
-export type ProviderChains = { [key in RPCProviders]: { [key in ChainsValues]: string } }
-
 type BaseAppContractInfo = {
   abi: any[]
   decimals?: number
-  icon?: JSX.Element
+  // icon?: JSX.Element
   symbol?: string
   priceTokenId?: string
 }
 
-export type ChainAppContractInfo = BaseAppContractInfo & {
-  address: string
-}
-
-export type AppContractInfo = BaseAppContractInfo & {
-  address: { [key in ChainsValues]: string }
-}
-
-export type IntrinsicElements<H extends HTMLElement = HTMLElement> = DetailedHTMLProps<
-  HTMLAttributes<H>,
-  H
->
+// export type IntrinsicElements<H extends HTMLElement = HTMLElement> = DetailedHTMLProps<
+//   HTMLAttributes<H>,
+//   H
+// >
 
 export const isFulfilled = <T>(
   input: PromiseSettledResult<T>,
@@ -96,6 +84,15 @@ export enum Severity {
   'Normal' = 1,
   'Above average' = 3,
   'Heavy' = 5,
+  'Custom' = 99,
 }
 
 export const Severity_Keys = ['Normal', 'Above average', 'Heavy'] as const
+
+export type IPFSHash = string
+
+export type NFTAttribute = {
+  trait_type: string
+  value: string | number
+  display_type?: undefined | 'date'
+}

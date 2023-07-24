@@ -1,24 +1,20 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const endpoints = require('./src/subgraph/subgraph-endpoints.json')
 
-const codeGenOutDir = 'subgraph/generated/subgraph.ts'
+const codeGenOutDir = './src/subgraph/generated/subgraph.ts'
 
 const schemas = Object.values(endpoints).reduce((acc, current) => {
-  return [...acc, ...Object.values(current)]
+  const values = Object.values(current)
+  return values && values[0] && values[0] !== '' ? [...acc, ...values] : [...acc]
 }, [])
 
 module.exports = {
   overwrite: true,
-  schema: 'https://api.thegraph.com/subgraphs/name/thebadgeadmin/dev', // TODO use schemas object
+  schema: schemas,
   documents: 'src/subgraph/queries/**/*.ts',
   generates: {
     [codeGenOutDir]: {
-      plugins: [
-        'typescript',
-        'typescript-operations',
-        'typescript-graphql-request',
-        'plugin-typescript-swr',
-      ],
+      plugins: ['typescript', 'typescript-operations', 'typescript-graphql-request', 'plugin-typescript-swr'],
     },
   },
   config: {

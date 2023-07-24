@@ -1,14 +1,9 @@
 import { MetadataColumn } from '@businessLogic/kleros/types'
-import {
-  BackendFileResponse,
-  BackendFileUpload,
-  IPFSHash,
-  NFTAttribute,
-} from '@businessLogic/utils'
+import { BackendFileResponse, BackendFileUpload, IPFSHash, NFTAttribute } from '@businessLogic/utils'
 
 export type BadgeEvidenceMetadata = {
   columns: MetadataColumn[]
-  values: Record<string, any>
+  values: Record<string, unknown>
 }
 
 export type BadgeModelMetadata<T = IPFSHash | BackendFileResponse | BackendFileUpload> = {

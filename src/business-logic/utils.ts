@@ -1,5 +1,3 @@
-// import type { DetailedHTMLProps, HTMLAttributes } from 'react'
-
 import { Contract } from '@ethersproject/contracts'
 import { KeyedMutator } from 'swr'
 
@@ -10,10 +8,7 @@ export type Maybe<T> = T | null
 export type RequiredNonNull<T> = { [P in keyof T]-?: NonNullable<T[P]> }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SwrResponse<T> = { data: T[]; loading: boolean; error: any }
-export type MySWRResponse<T> = [
-  { data: Awaited<T>; error: null } | { data: null; error: Error },
-  KeyedMutator<T>,
-]
+export type MySWRResponse<T> = [{ data: Awaited<T>; error: null } | { data: null; error: Error }, KeyedMutator<T>]
 export type Writeable<T> = { -readonly [P in keyof T]: T[P] }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,41 +24,15 @@ export type TupleReturnType<MyContract extends Contract, Tuple extends unknown[]
   ? [UnwrapReturnType<Head>, ...TupleReturnType<MyContract, Tail>]
   : []
 
-export type TupleParametersType<
-  MyContract extends Contract,
-  Tuple extends unknown[],
-> = Tuple extends [infer Head, ...infer Tail]
+export type TupleParametersType<MyContract extends Contract, Tuple extends unknown[]> = Tuple extends [
+  infer Head,
+  ...infer Tail,
+]
   ? [UnwrapParametersType<Head>, ...TupleParametersType<MyContract, Tail>]
   : []
 
-export enum RPCProviders {
-  infura = 'infura',
-  alchemy = 'alchemy',
-}
-
-export const RPCProvidersENV: Record<RPCProviders, any> = {
-  [RPCProviders.infura]: process.env.NEXT_PUBLIC_INFURA_TOKEN,
-  [RPCProviders.alchemy]: process.env.NEXT_PUBLIC_ALCHEMY_TOKEN,
-}
-
-export const isGitHubActionBuild = process.env.IS_GH_ACTION === 'true'
-
-type BaseAppContractInfo = {
-  abi: any[]
-  decimals?: number
-  // icon?: JSX.Element
-  symbol?: string
-  priceTokenId?: string
-}
-
-// export type IntrinsicElements<H extends HTMLElement = HTMLElement> = DetailedHTMLProps<
-//   HTMLAttributes<H>,
-//   H
-// >
-
-export const isFulfilled = <T>(
-  input: PromiseSettledResult<T>,
-): input is PromiseFulfilledResult<T> => input.status === 'fulfilled'
+export const isFulfilled = <T>(input: PromiseSettledResult<T>): input is PromiseFulfilledResult<T> =>
+  input.status === 'fulfilled'
 
 export type BackendResponse<T> = {
   error: boolean

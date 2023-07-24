@@ -37,8 +37,6 @@ export const contracts = {
 
 export type ContractsKeys = keyof typeof contracts
 
-export const isKnownContract = (
-  contractName: ContractsKeys | string,
-): contractName is ContractsKeys => {
+export const isKnownContract = (contractName: ContractsKeys | string): contractName is ContractsKeys => {
   return contracts[contractName as ContractsKeys] !== undefined
 }

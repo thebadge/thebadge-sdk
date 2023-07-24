@@ -18,11 +18,7 @@ export const BADGES_IN_REVIEW_AND_CHALLENGED = gql`
 `
 
 export const BADGES_IN_REVIEW_SMALL_SET = gql`
-  query badgesInReviewSmallSet(
-    $date: BigInt!
-    $statuses: [BadgeStatus!]!
-    $badgeReceiver: String!
-  ) {
+  query badgesInReviewSmallSet($date: BigInt!, $statuses: [BadgeStatus!]!, $badgeReceiver: String!) {
     badges(
       where: {
         badgeKlerosMetaData_: { reviewDueDate_gt: $date }

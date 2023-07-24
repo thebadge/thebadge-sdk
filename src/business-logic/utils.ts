@@ -1,0 +1,67 @@
+import { Contract } from '@ethersproject/contracts'
+import { KeyedMutator } from 'swr'
+
+export type ObjectValues<T> = T[keyof T]
+
+export type Extends<T, U extends T> = U
+export type Maybe<T> = T | null
+export type RequiredNonNull<T> = { [P in keyof T]-?: NonNullable<T[P]> }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type SwrResponse<T> = { data: T[]; loading: boolean; error: any }
+export type MySWRResponse<T> = [{ data: Awaited<T>; error: null } | { data: null; error: Error }, KeyedMutator<T>]
+export type Writeable<T> = { -readonly [P in keyof T]: T[P] }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type UnwrapReturnType<T> = T extends (...args: any) => any ? Awaited<ReturnType<T>> : never
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type UnwrapParametersType<T> = T extends (...args: any) => any ? Parameters<T> : never
+
+export type TupleReturnType<MyContract extends Contract, Tuple extends unknown[]> = Tuple extends [
+  infer Head,
+  ...infer Tail,
+]
+  ? [UnwrapReturnType<Head>, ...TupleReturnType<MyContract, Tail>]
+  : []
+
+export type TupleParametersType<MyContract extends Contract, Tuple extends unknown[]> = Tuple extends [
+  infer Head,
+  ...infer Tail,
+]
+  ? [UnwrapParametersType<Head>, ...TupleParametersType<MyContract, Tail>]
+  : []
+
+export const isFulfilled = <T>(input: PromiseSettledResult<T>): input is PromiseFulfilledResult<T> =>
+  input.status === 'fulfilled'
+
+export type BackendResponse<T> = {
+  error: boolean
+  statusCode: number
+  message?: string
+  result: null | T
+}
+
+export type BackendFileUpload = { mimeType: string; base64File: string }
+export type BackendFileResponse = {
+  mimeType: string
+  s3Url: string
+  extension: string
+  ipfs: string
+}
+
+export enum Severity {
+  'Normal' = 1,
+  'Above average' = 3,
+  'Heavy' = 5,
+  'Custom' = 99,
+}
+
+export const Severity_Keys = ['Normal', 'Above average', 'Heavy'] as const
+
+export type IPFSHash = string
+
+export type NFTAttribute = {
+  trait_type: string
+  value: string | number
+  display_type?: undefined | 'date'
+}

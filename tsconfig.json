@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "outDir": "dist",
+    "lib": ["dom", "dom.iterable", "esnext", "esnext.asynciterable"],
+    "declaration": true,
+    "declarationDir": "types",
+    "allowJs": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "emitDeclarationOnly": true,
+    "baseUrl": "./",
+    "paths": {
+      "@subgraph/*": ["./src/subgraph/*"],
+      "@businessLogic/*": ["./src/business-logic/*"]
+    }
+  },
+  "include": ["src/**/*", "assets/**/*", "declaration.d.ts", "next-env.d.ts"],
+  "exclude": ["node_modules", "lib", "dist"]
+}

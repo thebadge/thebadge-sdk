@@ -34,8 +34,16 @@ export default [
             replacement: path.resolve(__dirname, './src/business-logic'),
           },
           {
+            find: '@config',
+            replacement: path.resolve(__dirname, './src/config'),
+          },
+          {
             find: '@subgraph',
             replacement: path.resolve(__dirname, './src/subgraph'),
+          },
+          {
+            find: '@utils',
+            replacement: path.resolve(__dirname, './src/utils'),
           },
         ],
       }),

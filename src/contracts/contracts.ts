@@ -2,7 +2,7 @@ import Kleros from './abis/Kleros.json'
 import KlerosController from './abis/KlerosController.json'
 import TCR from './abis/TCR.json'
 import TheBadge from './abis/TheBadge.json'
-import { Chains } from '@/src/config/web3'
+import { Chains } from '@config/web3'
 
 export const contracts = {
   TheBadge: {

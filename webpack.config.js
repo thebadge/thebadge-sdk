@@ -19,8 +19,10 @@ module.exports = {
   },
   resolve: {
     alias: {
-      '@subgraph': path.resolve(__dirname, './src/subgraph/*'),
       '@businessLogic': path.resolve(__dirname, './src/business-logic/*'),
+      '@config': path.resolve(__dirname, './src/config/*'),
+      '@subgraph': path.resolve(__dirname, './src/subgraph/*'),
+      '@utils': path.resolve(__dirname, './src/utils/*'),
     },
   },
 }

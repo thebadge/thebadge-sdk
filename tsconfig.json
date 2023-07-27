@@ -21,7 +21,6 @@
     "baseUrl": "./",
     "paths": {
       "@businessLogic/*": ["./src/business-logic/*"],
-      "@config/*": ["./src/config/*"],
       "@subgraph/*": ["./src/subgraph/*"],
       "@utils/*": ["./src/utils/*"]
     }

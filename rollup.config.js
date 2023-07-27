@@ -1,6 +1,7 @@
 import alias from '@rollup/plugin-alias'
 import { babel } from '@rollup/plugin-babel'
 import image from '@rollup/plugin-image'
+import json from '@rollup/plugin-json'
 import resolve from '@rollup/plugin-node-resolve'
 import typescript from '@rollup/plugin-typescript'
 import path from 'path'
@@ -34,10 +35,6 @@ export default [
             replacement: path.resolve(__dirname, './src/business-logic'),
           },
           {
-            find: '@config',
-            replacement: path.resolve(__dirname, './src/config'),
-          },
-          {
             find: '@subgraph',
             replacement: path.resolve(__dirname, './src/subgraph'),
           },
@@ -51,6 +48,7 @@ export default [
         include: 'src/**',
         exclude: 'node_modules/**',
       }),
+      json(),
       // TS
       typescript({
         sourceMap: true,

@@ -1,4 +1,4 @@
-import { BackendFileResponse } from '@businessLogic/utils'
+import { BackendFileResponse } from '@businessLogic/types'
 
 export type Creator = {
   name: string

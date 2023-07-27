@@ -34,7 +34,7 @@ export enum RPCProviders {
   alchemy = 'alchemy',
 }
 
-export const RPCProvidersENV: Record<RPCProviders, any> = {
+export const RPCProvidersENV: Record<RPCProviders, unknown> = {
   [RPCProviders.infura]: process.env.NEXT_PUBLIC_INFURA_TOKEN,
   [RPCProviders.alchemy]: process.env.NEXT_PUBLIC_ALCHEMY_TOKEN,
 }

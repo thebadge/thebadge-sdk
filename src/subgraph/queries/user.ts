@@ -82,9 +82,9 @@ export const USER_BADGES_IN_REVIEW = gql`
 `
 
 export const USER_BADGES_IN_REVIEW_AND_CHALLENGED = gql`
-  query userBadgesInReviewAndChallenged($userAddress: ID!, $date: BigInt!) {
+  query userBadgesInReviewAndChallenged($userAddress: ID!, $dateTimestamp: BigInt!) {
     user(id: $userAddress) {
-      badges(where: { badgeKlerosMetaData_: { reviewDueDate_gt: $date }, status_in: [Requested] }) {
+      badges(where: { badgeKlerosMetaData_: { reviewDueDate_gt: $dateTimestamp }, status_in: [Requested] }) {
         ...BadgesInReview
       }
     }

@@ -1,7 +1,7 @@
 import nullthrows from 'nullthrows'
 
 import { ChainConfig, ChainsValues } from '@businessLogic/chains'
-import { ObjectValues, ProviderChains, RPCProviders, RPCProvidersENV, isGitHubActionBuild } from '@businessLogic/utils'
+import { ObjectValues, ProviderChains, RPCProviders, RPCProvidersENV, isGitHubActionBuild } from '@businessLogic/types'
 
 export const Chains = {
   //mainnet: 1,
@@ -81,13 +81,3 @@ export function getNetworkConfig(chainId: ChainsValues): ChainConfig {
   const networkConfig = chainsConfig[chainId]
   return nullthrows(networkConfig, `No config for chain id: ${chainId}`)
 }
-
-/**
- * @dev Here you can add the list of tokens you want to use in the app
- * The list follow the standard from: https://tokenlists.org/
- */
-export const TokensLists = {
-  '1INCH': 'https://gateway.ipfs.io/ipns/tokens.1inch.eth',
-  COINGECKO: 'https://tokens.coingecko.com/uniswap/all.json',
-  OPTIMISM: 'https://static.optimism.io/optimism.tokenlist.json',
-} as const

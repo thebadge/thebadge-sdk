@@ -1,5 +1,5 @@
 import { MetadataColumn } from '@businessLogic/kleros/types'
-import { BackendFileResponse, BackendFileUpload, IPFSHash, NFTAttribute } from '@businessLogic/utils'
+import { BackendFileResponse, BackendFileUpload, IPFSHash, NFTAttribute } from '@businessLogic/types'
 
 export type BadgeEvidenceMetadata = {
   columns: MetadataColumn[]

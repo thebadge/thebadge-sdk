@@ -1,11 +1,30 @@
 import { ChainsValues } from '@businessLogic/chains'
-import { Sdk } from '@subgraph/generated/subgraph'
+import {
+  BadgeByBadgeModelIdQuery,
+  BadgeByIdQuery,
+  BadgesByUserQuery,
+  BadgesChallengedQuery,
+  BadgesInReviewOrChallengedQuery,
+  BadgesInReviewQuery,
+  BadgeStatus,
+  BadgesUserCanReviewQuery,
+  BadgeIdsOfUserByStatusesQuery,
+  BadgeIdsNotOfUserByStatusesQuery,
+} from '@subgraph/generated/subgraph'
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
-import { Chains, getNetworkConfig } from '@config/web3'
+import { Chains, getNetworkConfig } from '@utils/web3'
 import nullthrows from 'nullthrows'
-import { getBadgeById } from './methods/badge/badge'
-
-type TheBadgeSubgraph = Record<ChainsValues, Sdk>
+import {
+  getBadgeByBadgeModelId,
+  getBadgeById,
+  getBadgesByUser,
+  getBadgesChallenged,
+  getBadgesInReview,
+  getBadgesInReviewOrChallenged,
+  getBadgesUserCanReview,
+  getBadgeIdsOfUserByStatuses,
+  getBadgeIdsNotOfUserByStatuses,
+} from './methods/badge/badge'
 
 enum TheBadgeSDKPermissions {
   READ_ONLY = 'Read only',
@@ -48,17 +67,99 @@ class TheBadgeSDK {
   }
 
   /**
-   *
+   * Get current permissions, options:
+   * - READ_ONLY
+   * - READ_AND_WRITE
    */
   public getCurrentPermissions(): TheBadgeSDKPermissions {
     return this.web3Provider ? TheBadgeSDKPermissions.READ_AND_WRITE : TheBadgeSDKPermissions.READ_ONLY
   }
 
-  public async getBadgeById(badgeId: string) {
+  /**
+   * Get badge with a badge id
+   * @param badgeId
+   */
+  public async getBadgeById(badgeId: string): Promise<BadgeByIdQuery> {
     return await getBadgeById(this.chainId, badgeId)
+  }
+
+  /**
+   * Get all badges with a specific badge model id
+   * @param badgeModelId
+   */
+  public async getBadgeByBadgeModelId(badgeModelId: string): Promise<BadgeByBadgeModelIdQuery> {
+    return await getBadgeByBadgeModelId(this.chainId, badgeModelId)
+  }
+
+  /**
+   * Get all badges of a user
+   * @param userAddress
+   */
+  public async getBadgesByUser(userAddress: string): Promise<BadgesByUserQuery> {
+    return await getBadgesByUser(this.chainId, userAddress)
+  }
+
+  /**
+   * Get all badges with status in review
+   * @param dateTimestamp
+   */
+  public async getBadgesInReview(dateTimestamp: BigInteger): Promise<BadgesInReviewQuery> {
+    return await getBadgesInReview(this.chainId, dateTimestamp)
+  }
+
+  /**
+   * Get all badges with status challenged
+   * @param dateTimestamp
+   */
+  public async getBadgesChallenged(dateTimestamp: BigInteger): Promise<BadgesChallengedQuery> {
+    return await getBadgesChallenged(this.chainId, dateTimestamp)
+  }
+
+  /**
+   * Get all badges with status in review or challenged
+   * @param dateTimestamp
+   */
+  public async getBadgesInReviewOrChallenged(dateTimestamp: BigInteger): Promise<BadgesInReviewOrChallengedQuery> {
+    return await getBadgesInReviewOrChallenged(this.chainId, dateTimestamp)
+  }
+
+  /**
+   * Get all badges that a user can review
+   * @param userAddress
+   * @param dateTimestamp
+   */
+  public async getBadgesUserCanReview(
+    userAddress: string,
+    dateTimestamp: BigInteger,
+  ): Promise<BadgesUserCanReviewQuery> {
+    return await getBadgesUserCanReview(this.chainId, userAddress, dateTimestamp)
+  }
+
+  /**
+   * Get all ids of badges of a given user filtered by statuses
+   * @param userAddress
+   * @param statuses
+   */
+  public async getBadgeIdsOfUserByStatuses(
+    userAddress: string,
+    statuses: BadgeStatus[],
+  ): Promise<BadgeIdsOfUserByStatusesQuery> {
+    return await getBadgeIdsOfUserByStatuses(this.chainId, userAddress, statuses)
+  }
+
+  /**
+   * Get all ids of badges that are not of a given user filtered by statuses
+   * @param userAddress
+   * @param statuses
+   */
+  public async getBadgeIdsNotOfUserByStatuses(
+    userAddress: string,
+    statuses: BadgeStatus[],
+  ): Promise<BadgeIdsNotOfUserByStatusesQuery> {
+    return await getBadgeIdsNotOfUserByStatuses(this.chainId, userAddress, statuses)
   }
 }
 
 export default { TheBadgeSDK }
 
-export type { TheBadgeSubgraph, TheBadgeSDKPermissions }
+export type { TheBadgeSDKPermissions, ChainsValues, BadgeStatus }

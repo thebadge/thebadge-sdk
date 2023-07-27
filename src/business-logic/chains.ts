@@ -1,5 +1,5 @@
-import { Chains } from '@config/web3'
-import { ObjectValues } from '@businessLogic/utils'
+import { Chains } from '@utils/web3'
+import { ObjectValues } from '@businessLogic/types'
 
 export type ChainConfig = {
   id: ChainsValues

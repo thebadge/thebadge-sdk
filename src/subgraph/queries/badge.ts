@@ -10,8 +10,8 @@ export const BADGE_BY_ID = gql`
   }
 `
 
-export const BADGE_BY_MODEL_ID = gql`
-  query badgeByModelId($id: String!) {
+export const BADGE_BY_BADGE_MODEL_ID = gql`
+  query badgeByBadgeModelId($id: String!) {
     badges(where: { badgeModel: $id }) {
       ...BadgeWithJustIds
     }
@@ -27,40 +27,34 @@ export const BADGES_BY_USER = gql`
 `
 
 export const BADGES_IN_REVIEW = gql`
-  query badgesInReview($date: BigInt!) {
-    badges(where: { badgeKlerosMetaData_: { reviewDueDate_gt: $date }, status: Requested }) {
+  query badgesInReview($dateTimestamp: BigInt!) {
+    badges(where: { badgeKlerosMetaData_: { reviewDueDate_gt: $dateTimestamp }, status: Requested }) {
       ...BadgesInReview
     }
   }
 `
 
-export const BADGES_IN_REVIEW_AND_CHALLENGED = gql`
-  query badgesInReviewAndChallenged($date: BigInt!) {
-    badges(where: { badgeKlerosMetaData_: { reviewDueDate_gt: $date } }) {
+export const BADGES_CHALLENGED = gql`
+  query badgesChallenged($dateTimestamp: BigInt!) {
+    badges(where: { badgeKlerosMetaData_: { reviewDueDate_gt: $dateTimestamp }, status: Challenged }) {
       ...BadgesInReview
     }
   }
 `
 
-export const BADGES_IN_REVIEW_SMALL_SET = gql`
-  query badgesInReviewSmallSet($date: BigInt!, $statuses: [BadgeStatus!]!, $badgeReceiver: String!) {
-    badges(
-      where: {
-        badgeKlerosMetaData_: { reviewDueDate_gt: $date }
-        status_in: $statuses
-        account_starts_with: $badgeReceiver
-      }
-    ) {
-      ...BadgeWithJustIds
+export const BADGES_IN_REVIEW_OR_CHALLENGED = gql`
+  query badgesInReviewOrChallenged($dateTimestamp: BigInt!) {
+    badges(where: { badgeKlerosMetaData_: { reviewDueDate_gt: $dateTimestamp }, status_in: [Requested, Challenged] }) {
+      ...BadgesInReview
     }
   }
 `
 
 export const BADGES_USER_CAN_REVIEW = gql`
-  query badgesUserCanReview($userAddress: String!, $date: BigInt!) {
+  query badgesUserCanReview($userAddress: String!, $dateTimestamp: BigInt!) {
     badges(
       where: {
-        badgeKlerosMetaData_: { reviewDueDate_gt: $date }
+        badgeKlerosMetaData_: { reviewDueDate_gt: $dateTimestamp }
         status_in: [Requested, Challenged]
         account_not: $userAddress
       }
@@ -70,21 +64,17 @@ export const BADGES_USER_CAN_REVIEW = gql`
   }
 `
 
-export const BADGES_USER_CAN_REVIEW_SMALL_SET = gql`
-  query badgesUserCanReviewSmallSet(
-    $userAddress: String!
-    $date: BigInt!
-    $statuses: [BadgeStatus!]!
-    $badgeReceiver: String!
-  ) {
-    badges(
-      where: {
-        badgeKlerosMetaData_: { reviewDueDate_gt: $date }
-        status_in: $statuses
-        account_starts_with: $badgeReceiver
-        account_not: $userAddress
-      }
-    ) {
+export const BADGE_IDS_OF_USER_BY_STATUSES = gql`
+  query badgeIdsOfUserByStatuses($userAddress: String!, $statuses: [BadgeStatus!]!) {
+    badges(where: { status_in: $statuses, account_starts_with: $userAddress }) {
+      ...BadgeWithJustIds
+    }
+  }
+`
+
+export const BADGE_IDS_NOT_OF_USER_BY_STATUSES = gql`
+  query badgeIdsNotOfUserByStatuses($userAddress: String!, $statuses: [BadgeStatus!]!) {
+    badges(where: { status_in: $statuses, account_not: $userAddress }) {
       ...BadgeWithJustIds
     }
   }

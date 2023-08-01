@@ -11,7 +11,23 @@ import {
   BadgesUserCanReviewQuery,
   BadgeIdsOfUserByStatusesQuery,
   BadgeIdsNotOfUserByStatusesQuery,
+  Badge_Filter,
+  BadgesQuery,
+  BadgeMetadataByIdQuery,
+  BadgesMetadataUserHasChallengedQuery,
 } from '@subgraph/generated/subgraph'
+
+export async function getBadges(
+  chainId: ChainsValues,
+  searchParams?: { first: number; skip: number; filter?: Badge_Filter },
+): Promise<BadgesQuery> {
+  const subgraph = getSubgraph(chainId)
+  return await subgraph.badges({
+    first: searchParams?.first || 100,
+    skip: searchParams?.skip || 0,
+    filter: searchParams?.filter,
+  })
+}
 
 export async function getBadgeById(chainId: ChainsValues, badgeId: string): Promise<BadgeByIdQuery> {
   const subgraph = getSubgraph(chainId)
@@ -80,4 +96,20 @@ export async function getBadgeIdsNotOfUserByStatuses(
 ): Promise<BadgeIdsNotOfUserByStatusesQuery> {
   const subgraph = getSubgraph(chainId)
   return await subgraph.badgeIdsNotOfUserByStatuses({ userAddress, statuses })
+}
+
+export async function getBadgeMetadataById(
+  chainId: ChainsValues,
+  badgeMetadataId: string,
+): Promise<BadgeMetadataByIdQuery> {
+  const subgraph = getSubgraph(chainId)
+  return await subgraph.badgeMetadataById({ id: badgeMetadataId })
+}
+
+export async function getBadgesMetadataUserHasChallenged(
+  chainId: ChainsValues,
+  userAddress: string,
+): Promise<BadgesMetadataUserHasChallengedQuery> {
+  const subgraph = getSubgraph(chainId)
+  return await subgraph.badgesMetadataUserHasChallenged({ userAddress })
 }

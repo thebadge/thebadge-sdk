@@ -2,6 +2,14 @@ import gql from 'graphql-tag'
 
 // TODO: hardcoded for kleros, fix it.
 
+export const BADGES = gql`
+  query badges($first: Int!, $skip: Int!, $filter: Badge_filter) {
+    badges(first: $first, skip: $skip, orderBy: createdAt, orderDirection: desc, where: $filter) {
+      ...FullBadgeDetails
+    }
+  }
+`
+
 export const BADGE_BY_ID = gql`
   query badgeById($id: ID!) {
     badge(id: $id) {

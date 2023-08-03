@@ -19,11 +19,13 @@ export default [
       {
         file: 'dist/index.js',
         format: 'cjs',
+        sourcemap: true,
       },
       {
         file: 'dist/index.es.js',
         format: 'es',
         exports: 'named',
+        sourcemap: true,
       },
     ],
     plugins: [
@@ -52,12 +54,13 @@ export default [
       // TS
       typescript({
         sourceMap: true,
+        exclude: ['**/*.test.*', '**/*.spec.*'],
       }),
       resolve(),
       external(),
       terser(),
       babel({
-        exclude: 'node_modules/**',
+        exclude: ['node_modules/**'],
       }),
     ],
     external: [/node_modules/],

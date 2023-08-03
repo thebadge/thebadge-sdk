@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+const production = !process.env.ROLLUP_WATCH
 
 export default [
   {
@@ -19,13 +20,13 @@ export default [
       {
         file: 'dist/index.js',
         format: 'cjs',
-        sourcemap: true,
+        sourcemap: !production,
       },
       {
         file: 'dist/index.es.js',
         format: 'es',
         exports: 'named',
-        sourcemap: true,
+        sourcemap: !production,
       },
     ],
     plugins: [
@@ -46,6 +47,7 @@ export default [
           },
         ],
       }),
+      // sourcemaps(),
       image({
         include: 'src/**',
         exclude: 'node_modules/**',
@@ -53,7 +55,8 @@ export default [
       json(),
       // TS
       typescript({
-        sourceMap: true,
+        sourceMap: !production,
+        inlineSources: !production,
         exclude: ['**/*.test.*', '**/*.spec.*'],
       }),
       resolve(),
@@ -61,6 +64,7 @@ export default [
       terser(),
       babel({
         exclude: ['node_modules/**'],
+        inputSourceMap: !production,
       }),
     ],
     external: [/node_modules/],

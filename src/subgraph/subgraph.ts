@@ -1,19 +1,17 @@
 import { GraphQLClient } from 'graphql-request'
 import nullthrows from 'nullthrows'
 
-import endpoints from '@subgraph/subgraph-endpoints.json'
+import endpoints, { SubgraphName } from '@subgraph/endpoints'
 import { ChainsValues } from '@businessLogic/chains'
 import { getSdk } from '@subgraph/generated/subgraph'
 
-enum SubgraphName {
-  TheBadge = 'theBadge',
-}
-
 function getSubgraphSdkByNetwork(chainId: ChainsValues, subgraphName: SubgraphName): ReturnType<typeof getSdk> {
-  const sdkByNetworkConfig = getSdk(new GraphQLClient(endpoints[chainId][subgraphName]))
-  return nullthrows(sdkByNetworkConfig, `No sdk for chain id: ${chainId}`)
+  const subgraphUrl = endpoints[chainId].urls[subgraphName] || ''
+  const sdkByNetworkConfig = getSdk(new GraphQLClient(subgraphUrl))
+  return nullthrows(sdkByNetworkConfig, `No sdk for chain id ${chainId} and subgraphName ${subgraphName}`)
 }
 
-export function getSubgraph(chainId: ChainsValues): ReturnType<typeof getSdk> {
-  return getSubgraphSdkByNetwork(chainId, SubgraphName.TheBadge)
+export function getSubgraph(chainId: ChainsValues, devMode = false): ReturnType<typeof getSdk> {
+  const subgraphName = devMode ? SubgraphName.TheBadgeDEV : SubgraphName.TheBadge
+  return getSubgraphSdkByNetwork(chainId, subgraphName)
 }

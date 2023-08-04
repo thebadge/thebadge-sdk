@@ -29,20 +29,6 @@ export type TupleParametersType<MyContract extends Contract, Tuple extends unkno
   ? [UnwrapParametersType<Head>, ...TupleParametersType<MyContract, Tail>]
   : []
 
-export enum RPCProviders {
-  infura = 'infura',
-  alchemy = 'alchemy',
-}
-
-export const RPCProvidersENV: Record<RPCProviders, unknown> = {
-  [RPCProviders.infura]: process.env.NEXT_PUBLIC_INFURA_TOKEN,
-  [RPCProviders.alchemy]: process.env.NEXT_PUBLIC_ALCHEMY_TOKEN,
-}
-
-export const isGitHubActionBuild = process.env.IS_GH_ACTION === 'true'
-
-export type ProviderChains = { [key in RPCProviders]: { [key in ChainsValues]: string } }
-
 export type BackendResponse<T> = {
   error: boolean
   statusCode: number

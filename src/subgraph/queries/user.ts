@@ -66,7 +66,11 @@ export const USER_CREATED_BADGE_MODELS = gql`
         controllerType
         badgesMintedAmount
       }
-      createdBadgesModelAmount
+      statistics {
+        creatorStatistic {
+          createdBadgeModelsAmount
+        }
+      }
     }
   }
 `
@@ -106,7 +110,7 @@ export const USER_BADGES_IN_REVIEW_OR_CHALLENGED = gql`
 export const USER_BADGES_EXPIRING_BETWEEN = gql`
   query userBadgesExpiringBetween($userAddress: ID!, $startDateTimestamp: BigInt!, $endDateTimestamp: BigInt!) {
     user(id: $userAddress) {
-      badges(where: { validFor_gte: $startDateTimestamp, validFor_lte: $endDateTimestamp }) {
+      badges(where: { validUntil_gte: $startDateTimestamp, validUntil_lte: $endDateTimestamp }) {
         ...FullBadgeDetails
       }
     }

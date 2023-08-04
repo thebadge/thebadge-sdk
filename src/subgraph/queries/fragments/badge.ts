@@ -5,7 +5,7 @@ gql`
     id
     status
     uri
-    validFor
+    validUntil
     account {
       id
     }
@@ -63,6 +63,9 @@ gql`
         tcrList
         registrationUri
       }
+    }
+    badgeKlerosMetaData {
+      reviewDueDate
     }
   }
 `

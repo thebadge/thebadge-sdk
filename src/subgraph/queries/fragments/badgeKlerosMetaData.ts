@@ -17,11 +17,11 @@ gql`
     itemID
     reviewDueDate
     requests {
-      ...Request
+      type
     }
     badge {
       id
-      validFor
+      validUntil
       account {
         id
       }

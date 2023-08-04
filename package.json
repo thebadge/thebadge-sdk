@@ -11,7 +11,7 @@
     "lint:fix": "eslint --max-warnings 0 --ext \".js,.ts,.tsx\" --ignore-path .eslintignore --fix .",
     "prettier:fix": "prettier --write \"./**/*.{js,jsx,ts,tsx}\"",
     "typechain": "typechain --target=ethers-v5 ./src/contracts/abis/**/*.json --out-dir src/subgraph/generated/typechain/",
-    "subgraph-codegen": "graphql-codegen",
+    "subgraph-codegen": "graphql-codegen --config src/subgraph/codegen.ts",
     "test": "jest --verbose --debug",
     "test:quick": "jest --collectCoverage=false --env=jsdom --silent",
     "test:watch": "jest --collectCoverage=false --env=jsdom --watch --silent",

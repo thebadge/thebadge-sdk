@@ -5,7 +5,7 @@ import gql from 'graphql-tag'
 export const BADGES = gql`
   query badges($first: Int!, $skip: Int!, $filter: Badge_filter) {
     badges(first: $first, skip: $skip, orderBy: createdAt, orderDirection: desc, where: $filter) {
-      ...FullBadgeDetails
+      ...Badge
     }
   }
 `
@@ -13,7 +13,7 @@ export const BADGES = gql`
 export const BADGE_BY_ID = gql`
   query badgeById($id: ID!) {
     badge(id: $id) {
-      ...FullBadgeDetails
+      ...Badge
     }
   }
 `
@@ -21,7 +21,7 @@ export const BADGE_BY_ID = gql`
 export const BADGE_BY_BADGE_MODEL_ID = gql`
   query badgeByBadgeModelId($id: String!) {
     badges(where: { badgeModel: $id }) {
-      ...BadgeWithJustIds
+      ...Badge
     }
   }
 `
@@ -29,7 +29,7 @@ export const BADGE_BY_BADGE_MODEL_ID = gql`
 export const BADGES_BY_USER = gql`
   query badgesByUser($userAddress: String!) {
     badges(where: { account: $userAddress }) {
-      ...FullBadgeDetails
+      ...Badge
     }
   }
 `
@@ -37,7 +37,7 @@ export const BADGES_BY_USER = gql`
 export const BADGES_IN_REVIEW = gql`
   query badgesInReview($dateTimestamp: BigInt!) {
     badges(where: { badgeKlerosMetaData_: { reviewDueDate_gt: $dateTimestamp }, status: Requested }) {
-      ...BadgesInReview
+      ...Badge
     }
   }
 `
@@ -45,7 +45,7 @@ export const BADGES_IN_REVIEW = gql`
 export const BADGES_CHALLENGED = gql`
   query badgesChallenged($dateTimestamp: BigInt!) {
     badges(where: { badgeKlerosMetaData_: { reviewDueDate_gt: $dateTimestamp }, status: Challenged }) {
-      ...BadgesInReview
+      ...Badge
     }
   }
 `
@@ -53,7 +53,7 @@ export const BADGES_CHALLENGED = gql`
 export const BADGES_IN_REVIEW_OR_CHALLENGED = gql`
   query badgesInReviewOrChallenged($dateTimestamp: BigInt!) {
     badges(where: { badgeKlerosMetaData_: { reviewDueDate_gt: $dateTimestamp }, status_in: [Requested, Challenged] }) {
-      ...BadgesInReview
+      ...Badge
     }
   }
 `
@@ -67,7 +67,7 @@ export const BADGES_USER_CAN_REVIEW = gql`
         account_not: $userAddress
       }
     ) {
-      ...BadgesInReview
+      ...Badge
     }
   }
 `
@@ -75,7 +75,7 @@ export const BADGES_USER_CAN_REVIEW = gql`
 export const BADGE_IDS_OF_USER_BY_STATUSES = gql`
   query badgeIdsOfUserByStatuses($userAddress: String!, $statuses: [BadgeStatus!]!) {
     badges(where: { status_in: $statuses, account_starts_with: $userAddress }) {
-      ...BadgeWithJustIds
+      ...Badge
     }
   }
 `
@@ -83,7 +83,7 @@ export const BADGE_IDS_OF_USER_BY_STATUSES = gql`
 export const BADGE_IDS_NOT_OF_USER_BY_STATUSES = gql`
   query badgeIdsNotOfUserByStatuses($userAddress: String!, $statuses: [BadgeStatus!]!) {
     badges(where: { status_in: $statuses, account_not: $userAddress }) {
-      ...BadgeWithJustIds
+      ...Badge
     }
   }
 `

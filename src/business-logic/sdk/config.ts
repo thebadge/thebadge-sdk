@@ -18,16 +18,16 @@ export abstract class TheBadgeSDKConfig {
   protected readonly subgraph: ReturnType<typeof getSdk>
   protected readonly devMode: boolean
 
-  protected constructor(chainId: ChainsValues, options: TheBadgeSDKConfigOptions) {
+  protected constructor(chainId: ChainsValues, config: TheBadgeSDKConfigOptions) {
     nullthrows(TheBadgeSDKConfig.isChainSupported(chainId) ? chainId : null, `Chain ID ${chainId} is not supported`)
     const defaultReadOnlyProvider = new JsonRpcProvider(
-      getNetworkConfig(chainId, options.rpcProviderConfig)?.rpcUrl,
+      getNetworkConfig(chainId, config.rpcProviderConfig)?.rpcUrl,
       chainId,
     )
     this.chainId = chainId
     this.readOnlyProvider = defaultReadOnlyProvider
-    this.web3Provider = options.web3Provider
-    this.devMode = !!options.devMode
+    this.web3Provider = config.web3Provider
+    this.devMode = !!config.devMode
 
     this.subgraph = getSubgraph(this.chainId, this.devMode)
   }

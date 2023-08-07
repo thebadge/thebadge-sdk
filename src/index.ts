@@ -25,18 +25,18 @@ class TheBadgeSDK extends TheBadgeSDKConfig {
    * Constructor for TheBadgeSDK instance
    *
    * @param chainId is a number indicating the id of the chain to be used
-   * @param options:
+   * @param config:
    * - rpcProviderConfig provides the configuration for the read only provider { providerName, token }
    * - web3Provider is an optional parameter with the web 3 provider to perform write requests to a contract
    * - devMode is an optional parameter to use DEV data if the selected chain supports it
    */
-  constructor(chainId: ChainsValues, options: TheBadgeSDKConfigOptions) {
-    super(chainId, options)
+  constructor(chainId: ChainsValues, config: TheBadgeSDKConfigOptions) {
+    super(chainId, config)
 
     // initialize services
-    this.badges = new BadgesService(this.chainId, options)
-    this.badgeModels = new BadgeModelsService(this.chainId, options)
-    this.users = new UsersService(this.chainId, options)
+    this.badges = new BadgesService(this.chainId, config)
+    this.badgeModels = new BadgeModelsService(this.chainId, config)
+    this.users = new UsersService(this.chainId, config)
   }
 
   /**

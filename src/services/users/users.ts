@@ -2,7 +2,6 @@ import {
   Badge_Filter,
   UserBadgesFilteredQuery,
   UserQuery,
-  UserBadgesQuery,
   CreatorUsersIdQuery,
   UsersIdQuery,
   UserBadgesByModelIdQuery,
@@ -18,7 +17,6 @@ interface UsersServiceMethods {
   getIds(): Promise<UsersIdQuery>
   getCreatorsIds(): Promise<CreatorUsersIdQuery>
   getByAddress(userAddress: string): Promise<UserQuery>
-  getBadgesOfUser(userAddress: string): Promise<UserBadgesQuery>
   getBadgesOfUserFiltered(userAddress: string, badgesFilter: Badge_Filter): Promise<UserBadgesFilteredQuery>
   getBadgesOfUserByModelId(userAddress: string, modelId: string): Promise<UserBadgesByModelIdQuery>
   getBadgeModelsCreatedByUser(userAddress: string): Promise<UserCreatedBadgeModelsQuery>
@@ -50,10 +48,6 @@ export class UsersService extends TheBadgeSDKConfig implements UsersServiceMetho
 
   async getByAddress(userAddress: string): Promise<UserQuery> {
     return await this.subgraph.user({ userAddress })
-  }
-
-  async getBadgesOfUser(userAddress: string): Promise<UserBadgesQuery> {
-    return await this.subgraph.userBadges({ userAddress })
   }
 
   async getBadgesOfUserFiltered(userAddress: string, badgesFilter: Badge_Filter): Promise<UserBadgesFilteredQuery> {

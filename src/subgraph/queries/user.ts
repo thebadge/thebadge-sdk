@@ -24,20 +24,12 @@ export const USER = gql`
   }
 `
 
-export const USER_BADGES = gql`
-  query userBadges($userAddress: ID!) {
-    user(id: $userAddress) {
-      ...UserWithBadges
-    }
-  }
-`
-
 export const USER_BADGES_FILTERED = gql`
   query userBadgesFiltered($userAddress: ID!, $badgesFilter: Badge_filter) {
     user(id: $userAddress) {
       id
       badges(where: $badgesFilter) {
-        ...FullBadgeDetails
+        ...Badge
       }
     }
   }
@@ -47,9 +39,7 @@ export const USER_BADGES_BY_MODEL_ID = gql`
   query userBadgesByModelId($userAddress: ID!, $modelId: String!) {
     user(id: $userAddress) {
       badges(where: { badgeModel: $modelId }) {
-        id
-        status
-        createdAt
+        ...Badge
       }
     }
   }
@@ -79,7 +69,7 @@ export const USER_BADGES_IN_REVIEW = gql`
   query userBadgesInReview($userAddress: ID!, $dateTimestamp: BigInt!) {
     user(id: $userAddress) {
       badges(where: { badgeKlerosMetaData_: { reviewDueDate_gt: $dateTimestamp }, status_in: [Requested] }) {
-        ...FullBadgeDetails
+        ...Badge
       }
     }
   }
@@ -89,7 +79,7 @@ export const USER_BADGES_CHALLENGED = gql`
   query userBadgesChallenged($userAddress: ID!, $dateTimestamp: BigInt!) {
     user(id: $userAddress) {
       badges(where: { badgeKlerosMetaData_: { reviewDueDate_gt: $dateTimestamp }, status_in: [Challenged] }) {
-        ...BadgesInReview
+        ...Badge
       }
     }
   }
@@ -101,7 +91,7 @@ export const USER_BADGES_IN_REVIEW_OR_CHALLENGED = gql`
       badges(
         where: { badgeKlerosMetaData_: { reviewDueDate_gt: $dateTimestamp }, status_in: [Requested, Challenged] }
       ) {
-        ...BadgesInReview
+        ...Badge
       }
     }
   }
@@ -111,7 +101,7 @@ export const USER_BADGES_EXPIRING_BETWEEN = gql`
   query userBadgesExpiringBetween($userAddress: ID!, $startDateTimestamp: BigInt!, $endDateTimestamp: BigInt!) {
     user(id: $userAddress) {
       badges(where: { validUntil_gte: $startDateTimestamp, validUntil_lte: $endDateTimestamp }) {
-        ...FullBadgeDetails
+        ...Badge
       }
     }
   }

@@ -4,6 +4,7 @@
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
+  "files": ["dist"],
   "scripts": {
     "analyze": "ANALYZE=true yarn build",
     "build": "rm -rf ./dist && rollup -c --bundleConfigAsCjs",

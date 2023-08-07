@@ -13,7 +13,7 @@ export const BADGE_METADATA_BY_ID = gql`
 export const BADGES_METADATA_USER_HAS_CHALLENGED = gql`
   query badgesMetadataUserHasChallenged($userAddress: Bytes!) {
     badgeKlerosMetaDatas(where: { requests_: { challenger: $userAddress }, badge_: { status: Challenged } }) {
-      ...BadgeKlerosMetadataWithBadge
+      ...BadgeKlerosMetadata
     }
   }
 `

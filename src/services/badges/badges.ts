@@ -37,6 +37,13 @@ interface BadgesServiceMethods {
 }
 
 export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMethods {
+  /**
+   * Obtain all Badges
+   * @param searchParams:
+   * - first: amount of items that will return (default value: 100)
+   * - skip: amount of items that will skip in the order (default value: 0)
+   * - filter: customized badge filtering criteria
+   */
   public async get(searchParams?: { first: number; skip: number; filter?: Badge_Filter }): Promise<BadgesQuery> {
     return await this.subgraph.badges({
       first: searchParams?.first || 100,
@@ -45,10 +52,18 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     })
   }
 
+  /**
+   * Obtain a badge giving its id
+   * @param badgeId
+   */
   public async getById(badgeId: string): Promise<BadgeByIdQuery> {
     return await this.subgraph.badgeById({ id: badgeId })
   }
 
+  /**
+   * Obtain a badge giving its id
+   * @param badgeModelId
+   */
   public async getByBadgeModelId(badgeModelId: string): Promise<BadgeByBadgeModelIdQuery> {
     return await this.subgraph.badgeByBadgeModelId({ id: badgeModelId })
   }

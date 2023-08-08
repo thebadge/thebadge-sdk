@@ -7,8 +7,8 @@ import {
   BadgesInReviewQuery,
   BadgeStatus,
   BadgesUserCanReviewQuery,
-  BadgeIdsOfUserByStatusesQuery,
-  BadgeIdsNotOfUserByStatusesQuery,
+  BadgesOfUserByStatusesQuery,
+  BadgesNotOfUserByStatusesQuery,
   Badge_Filter,
   BadgesQuery,
   BadgeMetadataByIdQuery,
@@ -25,22 +25,21 @@ interface BadgesServiceMethods {
   getWithChallengedStatus(dateTimestamp: BigInteger): Promise<BadgesChallengedQuery>
   getWithInReviewOrChallengedStatus(dateTimestamp: BigInteger): Promise<BadgesInReviewOrChallengedQuery>
   getAbleForUserToReview(userAddress: string, dateTimestamp: BigInteger): Promise<BadgesUserCanReviewQuery>
-  getIdsOwnedByUserWithStatuses(userAddress: string, statuses: BadgeStatus[]): Promise<BadgeIdsOfUserByStatusesQuery>
-  getIdsNotOwnedByUserWithStatuses(
-    userAddress: string,
-    statuses: BadgeStatus[],
-  ): Promise<BadgeIdsNotOfUserByStatusesQuery>
-  getMetadataOfBadgeById(badgeMetadataId: string): Promise<BadgeMetadataByIdQuery>
+  getOwnedByUserWithStatuses(userAddress: string, statuses: BadgeStatus[]): Promise<BadgesOfUserByStatusesQuery>
+  getNotOwnedByUserWithStatuses(userAddress: string, statuses: BadgeStatus[]): Promise<BadgesNotOfUserByStatusesQuery>
+  getMetadataOfBadge(badgeId: string): Promise<BadgeMetadataByIdQuery>
   getMetadataOfBadgesUserHasChallenged(userAddress: string): Promise<BadgesMetadataUserHasChallengedQuery>
+  // getImageIPFSHashOfBadge(badgeId: string): string // TODO coming soon
   // mint(userAddress: string, badgeModelId: string, evidences: List<Evidence>) TODO coming soon
   // challenge(userAddress: string, badgeId: string, evidences?: List<Evidence>) TODO coming soon
 }
 
 export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMethods {
   /**
-   * Obtain all Badges
+   * Obtain badges
+   *
    * @param searchParams:
-   * - first: amount of items that will return (default value: 100)
+   * - first: max. amount of items that will return (default value: 100)
    * - skip: amount of items that will skip in the order (default value: 0)
    * - filter: customized badge filtering criteria
    */
@@ -61,29 +60,56 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
   }
 
   /**
-   * Obtain a badge giving its id
+   * Obtain badges with a specific badge model
+   *
    * @param badgeModelId
    */
   public async getByBadgeModelId(badgeModelId: string): Promise<BadgeByBadgeModelIdQuery> {
     return await this.subgraph.badgeByBadgeModelId({ id: badgeModelId })
   }
 
+  /**
+   * Obtain badges owned by a user giving the user's address
+   *
+   * @param userAddress
+   */
   public async getByOwnerUser(userAddress: string): Promise<BadgesByUserQuery> {
     return await this.subgraph.badgesByUser({ userAddress })
   }
 
+  /**
+   * Obtain badges with status 'Requested'
+   *
+   * @param dateTimestamp
+   */
   public async getWithInReviewStatus(dateTimestamp: BigInteger): Promise<BadgesInReviewQuery> {
     return await this.subgraph.badgesInReview({ dateTimestamp })
   }
 
+  /**
+   * Obtain badges with status 'Challenged'
+   *
+   * @param dateTimestamp
+   */
   public async getWithChallengedStatus(dateTimestamp: BigInteger): Promise<BadgesChallengedQuery> {
     return await this.subgraph.badgesChallenged({ dateTimestamp })
   }
 
+  /**
+   * Obtain badges with status 'Requested' or 'Challenged'
+   *
+   * @param dateTimestamp
+   */
   public async getWithInReviewOrChallengedStatus(dateTimestamp: BigInteger): Promise<BadgesInReviewOrChallengedQuery> {
     return await this.subgraph.badgesInReviewOrChallenged({ dateTimestamp })
   }
 
+  /**
+   * Obtain badges that a specific user can review at a specific moment (date timestamp)
+   *
+   * @param userAddress
+   * @param dateTimestamp
+   */
   public async getAbleForUserToReview(
     userAddress: string,
     dateTimestamp: BigInteger,
@@ -91,24 +117,46 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     return await this.subgraph.badgesUserCanReview({ userAddress, dateTimestamp })
   }
 
-  public async getIdsOwnedByUserWithStatuses(
+  /**
+   * Obtain badges owned by a user and with one status contained in a given list
+   *
+   * @param userAddress
+   * @param statuses
+   */
+  public async getOwnedByUserWithStatuses(
     userAddress: string,
     statuses: BadgeStatus[],
-  ): Promise<BadgeIdsOfUserByStatusesQuery> {
-    return await this.subgraph.badgeIdsOfUserByStatuses({ userAddress, statuses })
+  ): Promise<BadgesOfUserByStatusesQuery> {
+    return await this.subgraph.badgesOfUserByStatuses({ userAddress, statuses })
   }
 
-  public async getIdsNotOwnedByUserWithStatuses(
+  /**
+   * Obtain badges not owned by a user and with one status contained in a given list
+   *
+   * @param userAddress
+   * @param statuses
+   */
+  public async getNotOwnedByUserWithStatuses(
     userAddress: string,
     statuses: BadgeStatus[],
-  ): Promise<BadgeIdsNotOfUserByStatusesQuery> {
-    return await this.subgraph.badgeIdsNotOfUserByStatuses({ userAddress, statuses })
+  ): Promise<BadgesNotOfUserByStatusesQuery> {
+    return await this.subgraph.badgesNotOfUserByStatuses({ userAddress, statuses })
   }
 
-  public async getMetadataOfBadgeById(badgeMetadataId: string): Promise<BadgeMetadataByIdQuery> {
-    return await this.subgraph.badgeMetadataById({ id: badgeMetadataId })
+  /**
+   * Get metadata of a badge
+   *
+   * @param badgeId
+   */
+  public async getMetadataOfBadge(badgeId: string): Promise<BadgeMetadataByIdQuery> {
+    return await this.subgraph.badgeMetadataById({ id: badgeId })
   }
 
+  /**
+   * Get metadata of badges that a specific user has challenged
+   *
+   * @param userAddress
+   */
   public async getMetadataOfBadgesUserHasChallenged(
     userAddress: string,
   ): Promise<BadgesMetadataUserHasChallengedQuery> {

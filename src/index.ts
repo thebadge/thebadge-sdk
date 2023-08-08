@@ -6,6 +6,7 @@ import { BadgeModelsService } from './services/badgeModels/badgeModels'
 import { UsersService } from './services/users/users'
 import { TheBadgeSDKPermissions } from '@businessLogic/sdk/permissions'
 import { TheBadgeSDKConfig, TheBadgeSDKConfigOptions } from '@businessLogic/sdk/config'
+import { RPCProviderConfig, RPCProviders } from '@utils/web3'
 
 class TheBadgeSDK extends TheBadgeSDKConfig {
   public readonly badges: BadgesService
@@ -26,7 +27,9 @@ class TheBadgeSDK extends TheBadgeSDKConfig {
    *
    * @param chainId is a number indicating the id of the chain to be used
    * @param config:
-   * - rpcProviderConfig provides the configuration for the read only provider { providerName, token }
+   * - rpcProviderConfig provides the configuration for the read only provider: (name, token)
+   *      - name: string (for now only available 'infura' or 'alchemy'),
+   *      - token: string
    * - web3Provider is an optional parameter with the web 3 provider to perform write requests to a contract
    * - devMode is an optional parameter to use DEV data if the selected chain supports it
    */
@@ -81,6 +84,6 @@ class TheBadgeSDK extends TheBadgeSDKConfig {
   }
 }
 
-export default { TheBadgeSDK }
+export { TheBadgeSDK, RPCProviders }
 
-export type { TheBadgeSDKPermissions, ChainsValues, BadgeStatus }
+export type { TheBadgeSDKPermissions, TheBadgeSDKConfigOptions, RPCProviderConfig, ChainsValues, BadgeStatus }

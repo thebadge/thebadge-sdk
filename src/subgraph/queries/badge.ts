@@ -72,16 +72,16 @@ export const BADGES_USER_CAN_REVIEW = gql`
   }
 `
 
-export const BADGE_IDS_OF_USER_BY_STATUSES = gql`
-  query badgeIdsOfUserByStatuses($userAddress: String!, $statuses: [BadgeStatus!]!) {
+export const BADGES_OF_USER_BY_STATUSES = gql`
+  query badgesOfUserByStatuses($userAddress: String!, $statuses: [BadgeStatus!]!) {
     badges(where: { status_in: $statuses, account_starts_with: $userAddress }) {
       ...Badge
     }
   }
 `
 
-export const BADGE_IDS_NOT_OF_USER_BY_STATUSES = gql`
-  query badgeIdsNotOfUserByStatuses($userAddress: String!, $statuses: [BadgeStatus!]!) {
+export const BADGES_NOT_OF_USER_BY_STATUSES = gql`
+  query badgesNotOfUserByStatuses($userAddress: String!, $statuses: [BadgeStatus!]!) {
     badges(where: { status_in: $statuses, account_not: $userAddress }) {
       ...Badge
     }

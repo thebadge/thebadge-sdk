@@ -1,13 +1,15 @@
 {
   "name": "thebadge-sdk",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "analyze": "ANALYZE=true yarn build",
-    "build": "rm -rf ./dist && rollup -c --bundleConfigAsCjs",
+    "build": "yarn types-gen && rm -rf ./dist && rollup -c --bundleConfigAsCjs",
     "lint": "eslint --max-warnings 0 --ext \".js,.ts,.tsx\" --ignore-path .eslintignore .",
     "lint:fix": "eslint --max-warnings 0 --ext \".js,.ts,.tsx\" --ignore-path .eslintignore --fix .",
     "prettier:fix": "prettier --write \"./**/*.{js,jsx,ts,tsx}\"",
@@ -17,7 +19,6 @@
     "test:quick": "jest --collectCoverage=false --env=jsdom --silent",
     "test:watch": "jest --collectCoverage=false --env=jsdom --watch --silent",
     "types-gen": "yarn typechain && yarn subgraph-codegen",
-    "postinstall": "yarn typechain && yarn subgraph-codegen",
     "release-patch": "npm version patch && git push",
     "release-minor": "npm version minor && git push",
     "release-major": "npm version major && git push"

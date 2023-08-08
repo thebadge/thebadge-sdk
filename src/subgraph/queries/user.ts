@@ -1,16 +1,16 @@
 import gql from 'graphql-tag'
 
 export const USERS_ID = gql`
-  query usersId {
-    users {
+  query usersId($first: Int!, $skip: Int!) {
+    users(first: $first, skip: $skip) {
       id
     }
   }
 `
 
 export const CREATOR_USERS_ID = gql`
-  query creatorUsersId {
-    users(where: { isCreator: true }) {
+  query creatorUsersId($first: Int!, $skip: Int!) {
+    users(first: $first, skip: $skip, where: { isCreator: true }) {
       id
     }
   }

@@ -1,25 +1,18 @@
 module.exports = {
   testMatch: ['**/*.test.*', '**/*.spec.*'],
   moduleNameMapper: {
-    '^.+.(css|style|less|sass|scss|png|jpg|ttf|woff|woff2)$': '<rootDir>/config/fileStub.js',
-    '^@/(.*)$': '<rootDir>/$1',
-    '^~/(.*)$': '<rootDir>/$1',
-    '^.+\\.(css|scss|less)$': '<rootDir>/config/CSSStub.js',
+    '^@businessLogic(.*)$': '<rootDir>/src/business-logic/$1',
+    '^@subgraph(.*)$': '<rootDir>/src/subgraph/$1',
+    '^@utils(.*)$': '<rootDir>/src/utils/$1',
   },
-  moduleFileExtensions: ['js', 'json', 'ts', 'tsx'],
+  moduleFileExtensions: ['js', 'json', 'ts'],
   transform: {
     '^.+\\.ts$': 'ts-jest',
-    '^.+\\.tsx$': 'ts-jest',
     '^.+\\.js$': 'babel-jest',
   },
-  // setupFiles: ['./jest-global-mocks.js', './setup-env-vars.js'],
   setupFilesAfterEnv: ['./jest-console-error-handling.js'],
   collectCoverage: true,
-  collectCoverageFrom: [
-    '<rootDir>/src/components/**/*.(js|ts|tsx)',
-    '!<rootDir>/src/**/*.stories.(js|ts|tsx)', // exclude sb stories from coverage analysis
-  ],
+  collectCoverageFrom: ['<rootDir>/src/methods/**/*.(js|ts)'],
   reporters: ['default', 'jest-junit'],
-  // testEnvironment: 'jsdom',
   coverageReporters: ['lcov', 'cobertura', 'text'],
 }

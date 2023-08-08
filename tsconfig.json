@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2018",
     "outDir": "dist",
-    "lib": ["dom", "dom.iterable", "esnext", "esnext.asynciterable"],
+    "lib": ["dom", "dom.iterable"],
     "declaration": true,
     "declarationDir": "types",
     "allowJs": true,
@@ -20,10 +20,11 @@
     "emitDeclarationOnly": true,
     "baseUrl": "./",
     "paths": {
+      "@businessLogic/*": ["./src/business-logic/*"],
       "@subgraph/*": ["./src/subgraph/*"],
-      "@businessLogic/*": ["./src/business-logic/*"]
+      "@utils/*": ["./src/utils/*"]
     }
   },
-  "include": ["src/**/*", "assets/**/*", "declaration.d.ts", "next-env.d.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "lib", "dist"]
 }

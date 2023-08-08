@@ -1,6 +1,7 @@
 import alias from '@rollup/plugin-alias'
 import { babel } from '@rollup/plugin-babel'
 import image from '@rollup/plugin-image'
+import json from '@rollup/plugin-json'
 import resolve from '@rollup/plugin-node-resolve'
 import typescript from '@rollup/plugin-typescript'
 import path from 'path'
@@ -10,6 +11,7 @@ import { fileURLToPath } from 'url'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+const production = !process.env.ROLLUP_WATCH
 
 export default [
   {
@@ -18,11 +20,13 @@ export default [
       {
         file: 'dist/index.js',
         format: 'cjs',
+        sourcemap: !production,
       },
       {
         file: 'dist/index.es.js',
         format: 'es',
         exports: 'named',
+        sourcemap: !production,
       },
     ],
     plugins: [
@@ -37,21 +41,30 @@ export default [
             find: '@subgraph',
             replacement: path.resolve(__dirname, './src/subgraph'),
           },
+          {
+            find: '@utils',
+            replacement: path.resolve(__dirname, './src/utils'),
+          },
         ],
       }),
+      // sourcemaps(),
       image({
         include: 'src/**',
         exclude: 'node_modules/**',
       }),
+      json(),
       // TS
       typescript({
-        sourceMap: true,
+        sourceMap: !production,
+        inlineSources: !production,
+        exclude: ['**/*.test.*', '**/*.spec.*'],
       }),
       resolve(),
       external(),
       terser(),
       babel({
-        exclude: 'node_modules/**',
+        exclude: ['node_modules/**'],
+        inputSourceMap: !production,
       }),
     ],
     external: [/node_modules/],

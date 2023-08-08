@@ -1,20 +1,20 @@
 import { GraphQLClient } from 'graphql-request'
 import nullthrows from 'nullthrows'
 
-import endpoints from '@subgraph/subgraph-endpoints.json'
-import { ChainsValues } from '@businessLogic/chains'
-import { SdkWithHooks, getSdkWithHooks } from '@subgraph/generated/subgraph'
+import endpoints, { SubgraphName } from '@subgraph/endpoints'
+import { SupportedChainsValues } from '@businessLogic/chains'
+import { getSdk } from '@subgraph/generated/subgraph'
 
-export type AllSDK = Record<ChainsValues, SdkWithHooks>
-
-export enum SubgraphName {
-  TheBadge = 'theBadge',
+function getSubgraphSdkByNetwork(
+  chainId: SupportedChainsValues,
+  subgraphName: SubgraphName,
+): ReturnType<typeof getSdk> {
+  const subgraphUrl = endpoints[chainId].urls[subgraphName] || ''
+  const sdkByNetworkConfig = getSdk(new GraphQLClient(subgraphUrl))
+  return nullthrows(sdkByNetworkConfig, `No sdk for chain id ${chainId} and subgraphName ${subgraphName}`)
 }
 
-export function getSubgraphSdkByNetwork(
-  chainId: ChainsValues,
-  subgraphName: SubgraphName,
-): ReturnType<typeof getSdkWithHooks> {
-  const networkConfig = getSdkWithHooks(new GraphQLClient(endpoints[chainId][subgraphName]))
-  return nullthrows(networkConfig, `No sdk for chain id: ${chainId}`)
+export function getSubgraph(chainId: SupportedChainsValues, devMode = false): ReturnType<typeof getSdk> {
+  const subgraphName = devMode ? SubgraphName.TheBadgeDEV : SubgraphName.TheBadge
+  return getSubgraphSdkByNetwork(chainId, subgraphName)
 }

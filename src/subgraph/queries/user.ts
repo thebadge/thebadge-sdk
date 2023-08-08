@@ -1,34 +1,53 @@
 import gql from 'graphql-tag'
 
-export const USER_BY_ID = gql`
-  query userById($id: ID!) {
-    user(id: $id) {
+export const USERS_ID = gql`
+  query usersId($first: Int!, $skip: Int!) {
+    users(first: $first, skip: $skip) {
+      id
+    }
+  }
+`
+
+export const CREATOR_USERS_ID = gql`
+  query creatorUsersId($first: Int!, $skip: Int!) {
+    users(first: $first, skip: $skip, where: { isCreator: true }) {
+      id
+    }
+  }
+`
+
+export const USER = gql`
+  query user($userAddress: ID!) {
+    user(id: $userAddress) {
       ...User
     }
   }
 `
 
-export const USER_BY_ID_WITH_BADGES = gql`
-  query userByIdWithBadges($id: ID!) {
-    user(id: $id) {
-      ...UserWithBadges
-    }
-  }
-`
-
-export const MY_BADGES = gql`
-  query userBadges($ownerAddress: ID!, $where: Badge_filter) {
-    user(id: $ownerAddress) {
-      badges(where: $where) {
-        ...FullBadgeDetails
+export const USER_BADGES_FILTERED = gql`
+  query userBadgesFiltered($userAddress: ID!, $badgesFilter: Badge_filter) {
+    user(id: $userAddress) {
+      id
+      badges(where: $badgesFilter) {
+        ...Badge
       }
     }
   }
 `
 
-export const MY_CREATED_BADGE_TYPES = gql`
-  query userCreatedBadges($ownerAddress: ID!) {
-    user(id: $ownerAddress) {
+export const USER_BADGES_BY_MODEL_ID = gql`
+  query userBadgesByModelId($userAddress: ID!, $modelId: String!) {
+    user(id: $userAddress) {
+      badges(where: { badgeModel: $modelId }) {
+        ...Badge
+      }
+    }
+  }
+`
+
+export const USER_CREATED_BADGE_MODELS = gql`
+  query userCreatedBadgeModels($userAddress: ID!) {
+    user(id: $userAddress) {
       createdBadgeModels {
         validFor
         paused
@@ -37,36 +56,52 @@ export const MY_CREATED_BADGE_TYPES = gql`
         controllerType
         badgesMintedAmount
       }
-      createdBadgesModelAmount
-    }
-  }
-`
-
-export const MY_BADGE_TYPES_IN_REVIEW = gql`
-  query userBadgesInReview($ownerAddress: ID!) {
-    user(id: $ownerAddress) {
-      badges(where: { status_in: [Requested] }) {
-        ...FullBadgeDetails
+      statistics {
+        creatorStatistic {
+          createdBadgeModelsAmount
+        }
       }
     }
   }
 `
 
-export const MY_BADGES_IN_REVIEW_AND_CHALLENGED = gql`
-  query userBadgesInReviewAndChallenged($ownerAddress: ID!, $date: BigInt!) {
-    user(id: $ownerAddress) {
-      badges(where: { badgeKlerosMetaData_: { reviewDueDate_gt: $date }, status_in: [Requested] }) {
-        ...BadgesInReview
+export const USER_BADGES_IN_REVIEW = gql`
+  query userBadgesInReview($userAddress: ID!, $dateTimestamp: BigInt!) {
+    user(id: $userAddress) {
+      badges(where: { badgeKlerosMetaData_: { reviewDueDate_gt: $dateTimestamp }, status_in: [Requested] }) {
+        ...Badge
       }
     }
   }
 `
 
-export const MY_BADGES_EXPIRING_BETWEEN = gql`
-  query userBadgesExpiringBetween($ownerAddress: ID!, $startDate: BigInt!, $endDate: BigInt!) {
-    user(id: $ownerAddress) {
-      badges(where: { validFor_gte: $startDate, validFor_lte: $endDate }) {
-        ...FullBadgeDetails
+export const USER_BADGES_CHALLENGED = gql`
+  query userBadgesChallenged($userAddress: ID!, $dateTimestamp: BigInt!) {
+    user(id: $userAddress) {
+      badges(where: { badgeKlerosMetaData_: { reviewDueDate_gt: $dateTimestamp }, status_in: [Challenged] }) {
+        ...Badge
+      }
+    }
+  }
+`
+
+export const USER_BADGES_IN_REVIEW_OR_CHALLENGED = gql`
+  query userBadgesInReviewOrChallenged($userAddress: ID!, $dateTimestamp: BigInt!) {
+    user(id: $userAddress) {
+      badges(
+        where: { badgeKlerosMetaData_: { reviewDueDate_gt: $dateTimestamp }, status_in: [Requested, Challenged] }
+      ) {
+        ...Badge
+      }
+    }
+  }
+`
+
+export const USER_BADGES_EXPIRING_BETWEEN = gql`
+  query userBadgesExpiringBetween($userAddress: ID!, $startDateTimestamp: BigInt!, $endDateTimestamp: BigInt!) {
+    user(id: $userAddress) {
+      badges(where: { validUntil_gte: $startDateTimestamp, validUntil_lte: $endDateTimestamp }) {
+        ...Badge
       }
     }
   }

@@ -1,4 +1,4 @@
-import { ChainsValues } from '@businessLogic/chains'
+import { RPCProvider, SupportedChainsValues, RPCProviderConfig } from '@businessLogic/chains'
 import { BadgeStatus } from '@subgraph/generated/subgraph'
 import { Web3Provider } from '@ethersproject/providers'
 import { BadgesService } from './services/badges/badges'
@@ -6,7 +6,6 @@ import { BadgeModelsService } from './services/badgeModels/badgeModels'
 import { UsersService } from './services/users/users'
 import { TheBadgeSDKPermissions } from '@businessLogic/sdk/permissions'
 import { TheBadgeSDKConfig, TheBadgeSDKConfigOptions } from '@businessLogic/sdk/config'
-import { RPCProviderConfig, RPCProviders } from '@utils/web3'
 
 class TheBadgeSDK extends TheBadgeSDKConfig {
   public readonly badges: BadgesService
@@ -18,7 +17,7 @@ class TheBadgeSDK extends TheBadgeSDKConfig {
    * @param chainId
    * @returns boolean
    */
-  public static isChainSupported(chainId: ChainsValues): boolean {
+  public static isChainSupported(chainId: number): boolean {
     return super.isChainSupported(chainId)
   }
 
@@ -33,7 +32,7 @@ class TheBadgeSDK extends TheBadgeSDKConfig {
    * - web3Provider is an optional parameter with the web 3 provider to perform write requests to a contract
    * - devMode is an optional parameter to use DEV data if the selected chain supports it
    */
-  constructor(chainId: ChainsValues, config: TheBadgeSDKConfigOptions) {
+  constructor(chainId: SupportedChainsValues, config: TheBadgeSDKConfigOptions) {
     super(chainId, config)
 
     // initialize services
@@ -46,8 +45,16 @@ class TheBadgeSDK extends TheBadgeSDKConfig {
    * Get id of the chain used on this instance
    * @returns number
    */
-  public getChainId(): ChainsValues {
+  public getChainId(): SupportedChainsValues {
     return this.chainId
+  }
+
+  /**
+   * Get the name of the RPC provider (for now only 'infura' and 'alchemy' supported)
+   * @returns RPCProvider
+   */
+  public getRPCProviderName(): RPCProvider {
+    return this.rpcProviderName
   }
 
   /**
@@ -84,6 +91,6 @@ class TheBadgeSDK extends TheBadgeSDKConfig {
   }
 }
 
-export { TheBadgeSDK, RPCProviders }
+export { TheBadgeSDK, RPCProvider, TheBadgeSDKPermissions }
 
-export type { TheBadgeSDKPermissions, TheBadgeSDKConfigOptions, RPCProviderConfig, ChainsValues, BadgeStatus }
+export type { TheBadgeSDKConfigOptions, RPCProviderConfig, SupportedChainsValues, BadgeStatus }

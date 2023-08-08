@@ -15,11 +15,11 @@ module.exports = {
   documents: 'src/subgraph/queries/**/*.ts',
   generates: {
     [codeGenOutDir]: {
-      plugins: ['typescript', 'typescript-operations', 'typescript-graphql-request', 'plugin-typescript-swr', 'jsdoc'],
+      plugins: ['typescript', 'typescript-operations', 'typescript-graphql-request', 'jsdoc'],
     },
   },
   config: {
     rawRequest: false,
-    autogenSWRKey: true,
+    autogenSWRKey: false,
   },
 }

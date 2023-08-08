@@ -1,8 +1,9 @@
 module.exports = {
   testMatch: ['**/*.test.*', '**/*.spec.*'],
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/$1',
-    '^~/(.*)$': '<rootDir>/$1',
+    '^@businessLogic(.*)$': '<rootDir>/src/business-logic/$1',
+    '^@subgraph(.*)$': '<rootDir>/src/subgraph/$1',
+    '^@utils(.*)$': '<rootDir>/src/utils/$1',
   },
   moduleFileExtensions: ['js', 'json', 'ts'],
   transform: {

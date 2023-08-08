@@ -1,7 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
 
-import { ChainsValues } from '@businessLogic/chains'
-
 export type ObjectValues<T> = T[keyof T]
 
 export type Extends<T, U extends T> = U

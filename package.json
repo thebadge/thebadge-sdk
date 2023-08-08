@@ -18,14 +18,13 @@
     "test": "jest --verbose --debug",
     "test:quick": "jest --collectCoverage=false --env=jsdom --silent",
     "test:watch": "jest --collectCoverage=false --env=jsdom --watch --silent",
-    "types-gen": "yarn typechain && yarn subgraph-codegen",
+    "types-gen": "rm -rf ./src/subgraph/generated && yarn typechain && yarn subgraph-codegen",
     "release-patch": "npm version patch && git push",
     "release-minor": "npm version minor && git push",
     "release-major": "npm version major && git push"
   },
   "dependencies": {
     "axios": "^1.2.3",
-    "big-number-input": "^1.0.3",
     "ethers": "^5.7.2",
     "graphql": "^16.6.0",
     "graphql-request": "^5.1.0",
@@ -69,7 +68,6 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-sort-destructure-keys": "^1.4.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "graphql-codegen-plugin-typescript-swr": "^0.8.3",
     "jest": "^28.0.2",
     "jest-fail-on-console": "^2.1.1",
     "jest-junit": "^13.1.0",

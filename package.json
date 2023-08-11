@@ -94,7 +94,7 @@
       "bash -c tsc"
     ]
   },
-  "description": "The badge SDK",
+  "description": "TheBadge SDK",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thebadge/thebadge-sdk.git"

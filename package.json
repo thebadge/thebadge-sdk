@@ -1,5 +1,5 @@
 {
-  "name": "thebadge-sdk",
+  "name": "@thebadge/sdk",
   "version": "0.0.1",
   "license": "MIT",
   "main": "dist/index.js",
@@ -93,5 +93,22 @@
       "prettier --write",
       "bash -c tsc"
     ]
-  }
+  },
+  "description": "The badge SDK",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thebadge/thebadge-sdk.git"
+  },
+  "keywords": [
+    "sdk",
+    "web3",
+    "nfts",
+    "thebadge",
+    "badge"
+  ],
+  "author": "hello@thebadge.xyz",
+  "bugs": {
+    "url": "https://github.com/thebadge/thebadge-sdk/issues"
+  },
+  "homepage": "https://github.com/thebadge/thebadge-sdk#readme"
 }

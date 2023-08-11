@@ -2,7 +2,7 @@ import { THE_BADGE_THE_GRAPH_BASE_URL } from '../utils/constants'
 
 const THE_BADGE_THE_GRAPH_URL_DEV = THE_BADGE_THE_GRAPH_BASE_URL + 'develop'
 const THE_BADGE_THE_GRAPH_URL_QA = THE_BADGE_THE_GRAPH_BASE_URL + 'staging'
-const THE_BADGE_THE_GRAPH_URL_PROD = THE_BADGE_THE_GRAPH_BASE_URL + 'prod'
+//const THE_BADGE_THE_GRAPH_URL_PROD = THE_BADGE_THE_GRAPH_BASE_URL + 'prod'
 
 export enum SubgraphName {
   TheBadge = 'theBadge',

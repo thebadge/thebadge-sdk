@@ -18,7 +18,7 @@ export async function getFromIPFS<T, X = {}>(hash: string): Promise<BackendRespo
   }
 
   if (!hash) return errorResponse
-  const cleanedHash = hash.replace(/^ipfs?:\/\//, '')
+  const cleanedHash = hash.replace(/^ipfs?:\/\//, '').replace(/^ipfs?\//, '')
   if (!cleanedHash) return errorResponse
 
   const response = await axios.get<BackendResponse<{ content: T } & X>>(

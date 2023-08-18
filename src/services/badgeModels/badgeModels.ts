@@ -1,11 +1,18 @@
-import { BadgeModel_Filter, BadgeModelByIdQuery, BadgeModelsQuery } from '@subgraph/generated/subgraph'
+import {
+  BadgeModel_Filter,
+  BadgeModelByIdQuery,
+  BadgeModelsQuery,
+  BadgeModelMetadataByIdQuery,
+} from '@subgraph/generated/subgraph'
 import { TheBadgeSDKConfig } from '@businessLogic/sdk/config'
+import { getFromIPFS } from '@utils/ipfs'
+import { MetadataColumn } from '@businessLogic/kleros/types'
 
 interface BadgeModelsServiceMethods {
   get(searchParams?: { first: number; skip: number; filter?: BadgeModel_Filter }): Promise<BadgeModelsQuery>
   getById(badgeModelId: string): Promise<BadgeModelByIdQuery>
   getMetadataOfBadgeModel(badgeModelId: string): Promise<BadgeModelByIdQuery>
-  getEvidenceRequirementsOfBadgeModel(badgeModelId: string): Promise<Array<unknown>>
+  getEvidenceRequirementsOfBadgeModel(badgeModelId: string): Promise<Array<MetadataColumn> | null>
   // create(userAddress: string, params: BadgeModelCreationParams) TODO coming soon
   // challenge(userAddress: string, badgeModelId: string, evidences?: List<Evidence>) TODO coming soon
 }
@@ -41,7 +48,7 @@ export class BadgeModelsService extends TheBadgeSDKConfig implements BadgeModels
    *
    * @param badgeModelId
    */
-  async getMetadataOfBadgeModel(badgeModelId: string): Promise<BadgeModelByIdQuery> {
+  async getMetadataOfBadgeModel(badgeModelId: string): Promise<BadgeModelMetadataByIdQuery> {
     return await this.subgraph.badgeModelMetadataById({ id: badgeModelId })
   }
 
@@ -49,11 +56,24 @@ export class BadgeModelsService extends TheBadgeSDKConfig implements BadgeModels
    * Get evidence requirements of a badge model giving its id
    *
    * @param badgeModelId
-   * @returns Promise<Array<unknown>>
+   * @returns an Array<MetadataColumn> or null if not found
    */
-  public async getEvidenceRequirementsOfBadgeModel(badgeModelId: string): Promise<Array<unknown>> {
-    const badgeModelResponse = await this.getById(badgeModelId)
-    console.log('badgeModelResponse', badgeModelResponse)
-    return Promise.resolve([])
+  public async getEvidenceRequirementsOfBadgeModel(badgeModelId: string): Promise<Array<MetadataColumn> | null> {
+    // take ipfs uri from metadata of the badge model
+    const badgeModelMetadataResponse = await this.getMetadataOfBadgeModel(badgeModelId)
+    const ipfsDataUri = badgeModelMetadataResponse?.badgeModelKlerosMetaData?.registrationUri
+    if (!ipfsDataUri) {
+      return null
+    }
+
+    // obtain evidences required
+    const { result, error } = await getFromIPFS<{ metadata: { columns: MetadataColumn[] } }>(ipfsDataUri)
+
+    if (error) {
+      return null
+    }
+
+    // return the list of evidences required
+    return result?.content?.metadata?.columns || null
   }
 }

@@ -8,7 +8,6 @@ const schemas = Object.values(endpoints).reduce((acc: Array<unknown>, current) =
   const values = Object.values(current.urls)
   return values && values[0] && values[0] !== '' ? [...acc, ...values] : [...acc]
 }, [])
-console.log('schemas', schemas)
 module.exports = {
   overwrite: true,
   schema: schemas,

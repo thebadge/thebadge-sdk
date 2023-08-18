@@ -10,12 +10,21 @@ import { THE_BADGE_BACKEND_URL } from '@utils/constants'
  * @param {string} hash - The IPFS hash representing the content to retrieve.
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
-export async function getFromIPFS<T, X = {}>(hash?: string): Promise<unknown> {
-  if (!hash) return
-  const cleanedHash = hash.replace(/^ipfs?:\/\//, '')
-  if (!cleanedHash) return
+export async function getFromIPFS<T, X = {}>(hash: string): Promise<BackendResponse<{ content: T } & X>> {
+  const errorResponse: BackendResponse<{ content: T } & X> = {
+    error: true,
+    statusCode: 404,
+    result: null,
+  }
 
-  return await axios.get<BackendResponse<{ content: T } & X>>(`${THE_BADGE_BACKEND_URL}/api/ipfs/${cleanedHash}`)
+  if (!hash) return errorResponse
+  const cleanedHash = hash.replace(/^ipfs?:\/\//, '')
+  if (!cleanedHash) return errorResponse
+
+  const response = await axios.get<BackendResponse<{ content: T } & X>>(
+    `${THE_BADGE_BACKEND_URL}/api/ipfs/${cleanedHash}`,
+  )
+  return response.data
 }
 
 /**

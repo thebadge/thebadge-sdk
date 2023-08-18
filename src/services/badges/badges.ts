@@ -166,6 +166,7 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
 
   /**
    * Get IPFS hash of the visual image of a certain badge
+   *
    * @param badgeId
    * @returns Promise<string>
    */

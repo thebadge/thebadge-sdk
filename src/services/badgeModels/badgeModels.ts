@@ -5,7 +5,7 @@ interface BadgeModelsServiceMethods {
   get(searchParams?: { first: number; skip: number; filter?: BadgeModel_Filter }): Promise<BadgeModelsQuery>
   getById(badgeModelId: string): Promise<BadgeModelByIdQuery>
   getMetadataOfBadgeModel(badgeModelId: string): Promise<BadgeModelByIdQuery>
-  // getEvidenceRequirementsOfBadgeModel(badgeModelId: string) TODO coming soon
+  getEvidenceRequirementsOfBadgeModel(badgeModelId: string): Promise<Array<unknown>>
   // create(userAddress: string, params: BadgeModelCreationParams) TODO coming soon
   // challenge(userAddress: string, badgeModelId: string, evidences?: List<Evidence>) TODO coming soon
 }
@@ -33,7 +33,7 @@ export class BadgeModelsService extends TheBadgeSDKConfig implements BadgeModels
    * @param badgeModelId
    */
   async getById(badgeModelId: string): Promise<BadgeModelByIdQuery> {
-    return await this.subgraph.badgeModelById({ badgeModelId })
+    return await this.subgraph.badgeModelById({ id: badgeModelId })
   }
 
   /**
@@ -43,5 +43,17 @@ export class BadgeModelsService extends TheBadgeSDKConfig implements BadgeModels
    */
   async getMetadataOfBadgeModel(badgeModelId: string): Promise<BadgeModelByIdQuery> {
     return await this.subgraph.badgeModelMetadataById({ id: badgeModelId })
+  }
+
+  /**
+   * Get evidence requirements of a badge model giving its id
+   *
+   * @param badgeModelId
+   * @returns Promise<Array<unknown>>
+   */
+  public async getEvidenceRequirementsOfBadgeModel(badgeModelId: string): Promise<Array<unknown>> {
+    const badgeModelResponse = await this.getById(badgeModelId)
+    console.log('badgeModelResponse', badgeModelResponse)
+    return Promise.resolve([])
   }
 }

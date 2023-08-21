@@ -18,7 +18,7 @@ export async function getFromIPFS<T, X = {}>(hash: string): Promise<BackendRespo
   }
 
   if (!hash) return errorResponse
-  const cleanedHash = hash.replace(/^ipfs?:\/\//, '').replace(/^ipfs?\//, '')
+  const cleanedHash = cleanHash(hash)
   if (!cleanedHash) return errorResponse
 
   const response = await axios.get<BackendResponse<{ content: T } & X>>(
@@ -41,4 +41,28 @@ export async function uploadToIPFS(metadata: {
     metadata,
   )
   return res.data
+}
+
+/**
+ * Given a IPFS Hash or Url it returns just the hash to be used on our backend
+ * to fetch data
+ *
+ * @param hash
+ * @returns string
+ */
+export function cleanHash(hash: string): string {
+  // First replace the "ipfs://" and then the "ipfs/" that is needed for kleros
+  // Expected hash as example: ipfs://ipfs/QmSaqcFHpTBP4Ks1DoLuE4yjDSWcr4xBxsnRvW3k8EFc6F
+  return hash.replace(/^ipfs?:\/\//, '').replace(/^ipfs\//, '')
+}
+
+/**
+ * As it is a hash that is going to be read by Kleros, it needs to have an extra path
+ *
+ * @param hash
+ * @returns string
+ */
+export function convertHashToValidIPFSKlerosHash(hash: string): string {
+  // Expected hash as example: 'ipfs://ipfs/[hash]'
+  return `ipfs/${hash}`
 }

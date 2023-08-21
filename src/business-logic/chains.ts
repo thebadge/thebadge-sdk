@@ -4,6 +4,7 @@ import nullthrows from 'nullthrows'
 export const SupportedChains = {
   //mainnet: 1,
   goerli: 5,
+  sepolia: 11155111,
   gnosis: 100,
 } as const
 
@@ -25,10 +26,12 @@ export type ProviderChains = { [key in RPCProvider]: { [key in SupportedChainsVa
 export const providerChains: ProviderChains = {
   [RPCProvider.infura]: {
     [SupportedChains.goerli]: 'goerli',
+    [SupportedChains.sepolia]: 'sepolia',
     [SupportedChains.gnosis]: 'gnosis',
   },
   [RPCProvider.alchemy]: {
     [SupportedChains.goerli]: 'eth-goerli',
+    [SupportedChains.sepolia]: 'eth-sepolia',
     [SupportedChains.gnosis]: 'xDai-gnosis',
   },
 }
@@ -71,6 +74,16 @@ export function getChainsConfig(rpcProviderConfig: RPCProviderConfig): Record<Su
       chainIdHex: '0x5',
       rpcUrl: getProviderUrl(SupportedChains.goerli, rpcProviderConfig),
       blockExplorerUrls: ['https://goerli.etherscan.io/'],
+      token: 'ETH',
+    },
+    [SupportedChains.sepolia]: {
+      id: SupportedChains.sepolia,
+      name: 'Ethereum Sepolia',
+      shortName: 'sepoliaeth',
+      chainId: SupportedChains.sepolia,
+      chainIdHex: '0xaa36a7',
+      rpcUrl: getProviderUrl(SupportedChains.sepolia, rpcProviderConfig),
+      blockExplorerUrls: ['https://sepolia.etherscan.io/'],
       token: 'ETH',
     },
     [SupportedChains.gnosis]: {

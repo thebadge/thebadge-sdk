@@ -1,22 +1,30 @@
 import { THE_BADGE_THE_GRAPH_BASE_URL } from '../utils/constants'
 
-const THE_BADGE_THE_GRAPH_URL_DEV = THE_BADGE_THE_GRAPH_BASE_URL + 'develop'
-const THE_BADGE_THE_GRAPH_URL_QA = THE_BADGE_THE_GRAPH_BASE_URL + 'staging'
-//const THE_BADGE_THE_GRAPH_URL_PROD = THE_BADGE_THE_GRAPH_BASE_URL + 'prod'
+// subgraph URLs
+const GOERLI_SG_URL_DEV = THE_BADGE_THE_GRAPH_BASE_URL + 'develop'
+const GOERLI_SG_URL_QA = THE_BADGE_THE_GRAPH_BASE_URL + 'staging'
+const SEPOLIA_SG_URL = 'https://api.studio.thegraph.com/query/51391/thebadge-dev/version/latest'
+
+// TODO replace with PROD url (THE_BADGE_THE_GRAPH_BASE_URL + 'prod') when it is available
+const ETH_GRAPH_URL_PROD = GOERLI_SG_URL_QA
 
 export enum SubgraphName {
   TheBadge = 'theBadge',
   TheBadgeDEV = 'theBadgeDEV',
 }
 
-const testnetConfiguration = {
-  [SubgraphName.TheBadge]: THE_BADGE_THE_GRAPH_URL_QA,
-  [SubgraphName.TheBadgeDEV]: THE_BADGE_THE_GRAPH_URL_DEV,
+const testnetConfiguration = (devUrl: string, qaUrl: string) => {
+  return {
+    [SubgraphName.TheBadgeDEV]: devUrl,
+    [SubgraphName.TheBadge]: qaUrl,
+  }
 }
 
-const mainnetConfiguration = {
-  [SubgraphName.TheBadge]: THE_BADGE_THE_GRAPH_URL_QA, // TODO replace with PROD url when it is available
-  [SubgraphName.TheBadgeDEV]: null, // for mainnet chains there is no 'dev' subgraph, only prod
+const mainnetConfiguration = (prodUrl: string) => {
+  return {
+    [SubgraphName.TheBadgeDEV]: null, // for mainnets there is no 'dev' subgraph, only prod
+    [SubgraphName.TheBadge]: prodUrl,
+  }
 }
 
 export default {
@@ -34,11 +42,15 @@ export default {
   // },
   5: {
     chainName: 'Goerli (Ethereum testnet)',
-    urls: testnetConfiguration,
+    urls: testnetConfiguration(GOERLI_SG_URL_DEV, GOERLI_SG_URL_QA),
   },
   100: {
     chainName: 'Gnosis',
-    urls: mainnetConfiguration,
+    urls: mainnetConfiguration(ETH_GRAPH_URL_PROD),
+  },
+  11155111: {
+    chainName: 'Sepolia (Ethereum testnet)',
+    urls: testnetConfiguration(SEPOLIA_SG_URL, SEPOLIA_SG_URL),
   },
   // 80001: {
   //   chainName: 'Mumbai (Polygon testnet)',

@@ -3,9 +3,8 @@ import gql from 'graphql-tag'
 gql`
   fragment User on User {
     id
-    isVerified
     isCreator
-    creatorUri
+    metadataUri
     statistics {
       mintedBadgesAmount
       creatorStatistic {

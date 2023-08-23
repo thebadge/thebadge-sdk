@@ -9,8 +9,8 @@ export const BADGE_MODELS = gql`
 `
 
 export const BADGE_MODEL_BY_ID = gql`
-  query badgeModelById($badgeModelId: ID!) {
-    badgeModel(id: $badgeModelId) {
+  query badgeModelById($id: ID!) {
+    badgeModel(id: $id) {
       ...BadgeModel
     }
   }

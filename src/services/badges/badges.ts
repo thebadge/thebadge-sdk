@@ -15,6 +15,7 @@ import {
   BadgesMetadataUserHasChallengedQuery,
 } from '@subgraph/generated/subgraph'
 import { TheBadgeSDKConfig } from '@businessLogic/sdk/config'
+import { getFromIPFS } from '@utils/ipfs'
 
 interface BadgesServiceMethods {
   get(searchParams?: { first: number; skip: number; filter?: Badge_Filter }): Promise<BadgesQuery>
@@ -29,7 +30,7 @@ interface BadgesServiceMethods {
   getNotOwnedByUserWithStatuses(userAddress: string, statuses: BadgeStatus[]): Promise<BadgesNotOfUserByStatusesQuery>
   getMetadataOfBadge(badgeId: string): Promise<BadgeMetadataByIdQuery>
   getMetadataOfBadgesUserHasChallenged(userAddress: string): Promise<BadgesMetadataUserHasChallengedQuery>
-  // getImageIPFSHashOfBadge(badgeId: string): string // TODO coming soon
+  getImageIPFSHashOfBadge(badgeId: string): Promise<string | null>
   // mint(userAddress: string, badgeModelId: string, evidences: List<Evidence>) TODO coming soon
   // challenge(userAddress: string, badgeId: string, evidences?: List<Evidence>) TODO coming soon
 }
@@ -161,5 +162,32 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     userAddress: string,
   ): Promise<BadgesMetadataUserHasChallengedQuery> {
     return await this.subgraph.badgesMetadataUserHasChallenged({ userAddress })
+  }
+
+  /**
+   * Get IPFS hash of the visual image of a certain badge
+   *
+   * @param badgeId
+   * @returns a string or null if not found
+   */
+  public async getImageIPFSHashOfBadge(badgeId: string): Promise<string | null> {
+    // get badge with the given id
+    const badgeResponse = await this.getById(badgeId)
+
+    // take ipfs uri from badge object
+    const ipfsDataUri = badgeResponse?.badge?.uri
+    if (!ipfsDataUri) {
+      return null
+    }
+
+    // obtain badge image data
+    const { result, error } = await getFromIPFS<{ image: { ipfsHash: string } }>(ipfsDataUri)
+
+    if (error) {
+      return null
+    }
+
+    // return badge image ipfs hash
+    return result?.content?.image?.ipfsHash || null
   }
 }

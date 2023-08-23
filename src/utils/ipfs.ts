@@ -27,15 +27,20 @@ export async function getFromIPFS<T, X = {}>(hash: string): Promise<BackendRespo
   return response.data
 }
 
+type Args<T = Record<string, unknown>> = {
+  attributes: T
+  filePaths?: string[]
+  needKlerosPath?: boolean
+}
+
 /**
  * Uploads data to IPFS, using The Badge's backend.
  * @async
  * @param {attributes: Record<string, unknown>, filePaths?: string[]} metadata
  */
-export async function uploadToIPFS(metadata: {
-  attributes: Record<string, unknown>
-  filePaths?: string[]
-}): Promise<BackendResponse<{ ipfsHash: string; s3Url: string }>> {
+export async function uploadToIPFS<T>(
+  metadata: Args<T>,
+): Promise<BackendResponse<{ ipfsHash: string; s3Url: string }>> {
   const res = await axios.post<BackendResponse<{ ipfsHash: string; s3Url: string }>>(
     `${THE_BADGE_BACKEND_URL}/api/ipfs/pin`,
     metadata,
@@ -62,7 +67,10 @@ export function cleanHash(hash: string): string {
  * @param hash
  * @returns string
  */
-export function convertHashToValidIPFSKlerosHash(hash: string): string {
+export function convertHashToValidIPFSKlerosHash(hash?: string): string | null {
+  if (!hash) {
+    return null
+  }
   // Expected hash as example: 'ipfs://ipfs/[hash]'
   return `ipfs/${hash}`
 }

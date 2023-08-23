@@ -16,6 +16,18 @@ import {
 } from '@subgraph/generated/subgraph'
 import { TheBadgeSDKConfig } from '@businessLogic/sdk/config'
 import { getFromIPFS } from '@utils/ipfs'
+import { MetadataColumn } from '@businessLogic/kleros/types'
+import { contracts } from '../../contracts/contracts'
+import { TheBadge__factory } from '@subgraph/generated/typechain'
+import {
+  createAndUploadBadgeEvidence,
+  createAndUploadBadgeMetadata,
+  createKlerosValuesObject,
+  encodeIpfsEvidence,
+} from '@utils/badges/mintHelpers'
+import { BadgeModelMetadata } from '@businessLogic/theBadge/BadgeMetadata'
+import { KlerosListStructure } from '@utils/kleros/generateKlerosListMetaEvidence'
+import { BackendFileResponse } from '@businessLogic/types'
 
 interface BadgesServiceMethods {
   get(searchParams?: { first: number; skip: number; filter?: Badge_Filter }): Promise<BadgesQuery>
@@ -31,7 +43,13 @@ interface BadgesServiceMethods {
   getMetadataOfBadge(badgeId: string): Promise<BadgeMetadataByIdQuery>
   getMetadataOfBadgesUserHasChallenged(userAddress: string): Promise<BadgesMetadataUserHasChallengedQuery>
   getImageIPFSHashOfBadge(badgeId: string): Promise<string | null>
-  // mint(userAddress: string, badgeModelId: string, evidences: List<Evidence>) TODO coming soon
+  mint(
+    userAddress: string,
+    badgeModelId: string,
+    evidences: Record<string, unknown>,
+    base64PreviewImage: string,
+  ): Promise<unknown>
+  // claim(userAddress: string, badgeId: string) TODO coming soon
   // challenge(userAddress: string, badgeId: string, evidences?: List<Evidence>) TODO coming soon
 }
 
@@ -189,5 +207,78 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
 
     // return badge image ipfs hash
     return result?.content?.image?.ipfsHash || null
+  }
+
+  /**
+   * Mint a new badge of a certain model
+   *
+   * @param userAddress
+   * @param badgeModelId
+   * @param evidences
+   * @param base64PreviewImage
+   */
+  public async mint(
+    userAddress: string,
+    badgeModelId: string,
+    evidences: Record<string, unknown>,
+    base64PreviewImage: string,
+  ): Promise<unknown> {
+    if (!this.web3Provider) {
+      return 'ERROR: you need to initialize a web3Provider to perform this transaction'
+    }
+    const tbContract = TheBadge__factory.connect(contracts.TheBadge.address[this.chainId], this.web3Provider)
+
+    // get badge model
+    const badgeModelResponse = await this.subgraph.badgeModelById({ id: badgeModelId })
+    const badgeModel = badgeModelResponse.badgeModel
+
+    if (!badgeModel?.uri) {
+      return 'ERROR: no badge model uri'
+    }
+
+    const badgeModelIPFSDataResponse = await getFromIPFS<BadgeModelMetadata<BackendFileResponse>>(badgeModel?.uri)
+    const badgeModelIPFSData = badgeModelIPFSDataResponse ? badgeModelIPFSDataResponse.result?.content : null
+
+    // get badge model metadata
+    const badgeModelMetadataResponse = await this.subgraph.badgeModelMetadataById({ id: badgeModelId })
+    const badgeModelMetadata = badgeModelMetadataResponse.badgeModelKlerosMetaData
+
+    if (!badgeModelMetadata?.registrationUri) {
+      return 'ERROR: no badge model metadata registration uri'
+    }
+
+    const badgeModelMetadataRegistrationIPFSResponse = await getFromIPFS<KlerosListStructure>(
+      badgeModelMetadata?.registrationUri,
+    )
+    const badgeModelRegistrationMetadata = badgeModelMetadataRegistrationIPFSResponse
+      ? badgeModelMetadataRegistrationIPFSResponse.result?.content
+      : null
+
+    /*
+      TODO check if evidences apply to required evidences for badge model
+     */
+
+    const values = createKlerosValuesObject(evidences, badgeModelRegistrationMetadata)
+
+    const evidenceIPFSHash = await createAndUploadBadgeEvidence(
+      badgeModelRegistrationMetadata?.metadata.columns as MetadataColumn[],
+      values,
+    )
+    if (!evidenceIPFSHash) {
+      return 'ERROR: no evidence IPFS hash'
+    }
+
+    const klerosControllerDataEncoded = encodeIpfsEvidence(evidenceIPFSHash)
+
+    const mintValue = await tbContract.mintValue(badgeModelId)
+
+    const badgeMetadataIPFSHash = await createAndUploadBadgeMetadata(
+      badgeModelIPFSData as BadgeModelMetadata,
+      userAddress,
+      { imageBase64File: base64PreviewImage },
+    )
+    return tbContract.mint(badgeModelId, userAddress, badgeMetadataIPFSHash, klerosControllerDataEncoded, {
+      value: mintValue,
+    })
   }
 }

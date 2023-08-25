@@ -30,7 +30,7 @@ interface BadgesServiceMethods {
   getNotOwnedByUserWithStatuses(userAddress: string, statuses: BadgeStatus[]): Promise<BadgesNotOfUserByStatusesQuery>
   getMetadataOfBadge(badgeId: string): Promise<BadgeMetadataByIdQuery>
   getMetadataOfBadgesUserHasChallenged(userAddress: string): Promise<BadgesMetadataUserHasChallengedQuery>
-  getImageIPFSHashOfBadge(badgeId: string): Promise<string | null>
+  getImageIPFSHashOfBadge(badgeId: string): Promise<string>
   // mint(userAddress: string, badgeModelId: string, evidences: List<Evidence>) TODO coming soon
   // challenge(userAddress: string, badgeId: string, evidences?: List<Evidence>) TODO coming soon
 }
@@ -170,24 +170,25 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
    * @param badgeId
    * @returns a string or null if not found
    */
-  public async getImageIPFSHashOfBadge(badgeId: string): Promise<string | null> {
+  public async getImageIPFSHashOfBadge(badgeId: string): Promise<string> {
     // get badge with the given id
     const badgeResponse = await this.getById(badgeId)
 
     // take ipfs uri from badge object
     const ipfsDataUri = badgeResponse?.badge?.uri
     if (!ipfsDataUri) {
-      return null
+      throw new Error('Missing uri for the given badge id, provide a valid badge id.')
     }
 
     // obtain badge image data
     const { result, error } = await getFromIPFS<{ image: { ipfsHash: string } }>(ipfsDataUri)
+    const badgeImageIPFSHash = result?.content?.image?.ipfsHash
 
-    if (error) {
-      return null
+    if (error || !badgeImageIPFSHash) {
+      throw new Error('Error obtaining badge image data from IPFS, please retry.')
     }
 
     // return badge image ipfs hash
-    return result?.content?.image?.ipfsHash || null
+    return badgeImageIPFSHash
   }
 }

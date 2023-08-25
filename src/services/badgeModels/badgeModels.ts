@@ -12,7 +12,7 @@ interface BadgeModelsServiceMethods {
   get(searchParams?: { first: number; skip: number; filter?: BadgeModel_Filter }): Promise<BadgeModelsQuery>
   getById(badgeModelId: string): Promise<BadgeModelByIdQuery>
   getMetadataOfBadgeModel(badgeModelId: string): Promise<BadgeModelByIdQuery>
-  getEvidenceRequirementsOfBadgeModel(badgeModelId: string): Promise<Array<MetadataColumn> | null>
+  getEvidenceRequirementsOfBadgeModel(badgeModelId: string): Promise<Array<MetadataColumn>>
   // create(userAddress: string, params: BadgeModelCreationParams) TODO coming soon
   // challenge(userAddress: string, badgeModelId: string, evidences?: List<Evidence>) TODO coming soon
 }
@@ -58,22 +58,22 @@ export class BadgeModelsService extends TheBadgeSDKConfig implements BadgeModels
    * @param badgeModelId
    * @returns an Array<MetadataColumn> or null if not found
    */
-  public async getEvidenceRequirementsOfBadgeModel(badgeModelId: string): Promise<Array<MetadataColumn> | null> {
+  public async getEvidenceRequirementsOfBadgeModel(badgeModelId: string): Promise<Array<MetadataColumn>> {
     // take ipfs uri from metadata of the badge model
     const badgeModelMetadataResponse = await this.getMetadataOfBadgeModel(badgeModelId)
     const ipfsDataUri = badgeModelMetadataResponse?.badgeModelKlerosMetaData?.registrationUri
     if (!ipfsDataUri) {
-      return null
+      throw new Error('Missing registrationUri for the given badge model id, provide a valid model id.')
     }
 
     // obtain evidences required
     const { result, error } = await getFromIPFS<{ metadata: { columns: MetadataColumn[] } }>(ipfsDataUri)
-
-    if (error) {
-      return null
+    const evidencesList = result?.content?.metadata?.columns
+    if (error || !evidencesList) {
+      throw new Error('Error obtaining required evidences list from IPFS, please retry.')
     }
 
     // return the list of evidences required
-    return result?.content?.metadata?.columns || null
+    return evidencesList
   }
 }

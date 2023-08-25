@@ -59,7 +59,7 @@ class TheBadgeSDK extends TheBadgeSDKConfig {
 
   /**
    * Get the given web3Provider
-   * @returns Web3Provider | null
+   * @returns Web3Provider | undefined
    */
   public getWeb3Provider(): Web3Provider | undefined {
     return this.web3Provider

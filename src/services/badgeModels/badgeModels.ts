@@ -56,7 +56,7 @@ export class BadgeModelsService extends TheBadgeSDKConfig implements BadgeModels
    * Get evidence requirements of a badge model giving its id
    *
    * @param badgeModelId
-   * @returns an Array<MetadataColumn> or null if not found
+   * @returns Array<MetadataColumn>
    */
   public async getEvidenceRequirementsOfBadgeModel(badgeModelId: string): Promise<Array<MetadataColumn>> {
     // take ipfs uri from metadata of the badge model

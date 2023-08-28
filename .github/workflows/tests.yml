@@ -22,5 +22,7 @@ jobs:
           node-version: 18.16.1
       - name: Install modules
         run: yarn
+      - name: Generate types
+        run: yarn types-gen
       - name: Run jest unit tests
         run: yarn test

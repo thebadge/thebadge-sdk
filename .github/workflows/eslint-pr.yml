@@ -8,6 +8,8 @@ on:
     types: [opened, reopened, ready_for_review, synchronize]
     branches:
       - main
+      - staging
+      - develop
 
 # List of jobs
 jobs:

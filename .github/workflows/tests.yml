@@ -1,0 +1,26 @@
+# Workflow name
+name: 'Tests'
+
+# Event for the workflow
+# Triggers the workflow on push or pull request events but only for the development branch
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, synchronize]
+    branches:
+      - main
+      - staging
+      - develop
+
+# List of jobs
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.16.1
+      - name: Install modules
+        run: yarn
+      - name: Run jest unit tests
+        run: yarn test

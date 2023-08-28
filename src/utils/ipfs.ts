@@ -67,10 +67,7 @@ export function cleanHash(hash: string): string {
  * @param hash
  * @returns string
  */
-export function convertHashToValidIPFSKlerosHash(hash?: string): string | null {
-  if (!hash) {
-    return null
-  }
+export function convertHashToValidIPFSKlerosHash(hash: string): string {
   // Expected hash as example: 'ipfs://ipfs/[hash]'
   return `ipfs/${hash}`
 }

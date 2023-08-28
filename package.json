@@ -1,6 +1,6 @@
 {
   "name": "@thebadge/sdk",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -85,7 +85,7 @@
   },
   "engines": {
     "npm": ">=8.0.0",
-    "node": ">=16.8.0"
+    "node": ">=18.16.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

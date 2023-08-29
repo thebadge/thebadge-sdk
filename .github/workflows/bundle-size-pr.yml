@@ -21,6 +21,12 @@ jobs:
         with:
           node-version: '18.16.1' # ⬅ Specify a version of Node.js to build the app
 
+      - name: Install modules
+        run: yarn
+
+      - name: Generate types
+        run: yarn types-gen
+
       - name: Package size report
         uses: pkg-size/action@v1
         env:

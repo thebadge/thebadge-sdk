@@ -54,7 +54,6 @@ export function createEvidencesValuesObject(
 ): Record<string, unknown> {
   const values: Record<string, unknown> = {}
   if (!metadataColumns) return values
-  // If we change this "shape" key values, we need to update the klerosSchemaFactory on src/components/form/helpers/validators.ts
   metadataColumns.forEach((column, i) => {
     values[`${column.label}`] = data[`${i}`]
   })

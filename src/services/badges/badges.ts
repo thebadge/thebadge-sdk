@@ -29,6 +29,7 @@ import { BadgeModelMetadata } from '@businessLogic/theBadge/BadgeMetadata'
 import { KlerosListStructure } from '@utils/kleros/generateKlerosListMetaEvidence'
 import { BackendFileResponse } from '@businessLogic/types'
 import { ContractTransaction } from 'ethers'
+import { schemaFactory } from '@utils/zod/validators'
 
 interface BadgesServiceMethods {
   get(searchParams?: { first: number; skip: number; filter?: Badge_Filter }): Promise<BadgesQuery>
@@ -222,7 +223,7 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
   public async mint(
     userAddress: string,
     badgeModelId: string,
-    evidences: Record<string, unknown>,
+    evidences: Record<number, unknown>, // { evidenceIndex: evidenceValue }, example: { 0: 'text1', 1: 'text2', 2: date1 }
     base64PreviewImage: string,
   ): Promise<ContractTransaction> {
     if (!this.web3Provider) {
@@ -243,8 +244,14 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
       throw new Error('No badge model uri, please enter a valid badge model id')
     }
 
-    const badgeModelIPFSDataResponse = await getFromIPFS<BadgeModelMetadata<BackendFileResponse>>(badgeModel?.uri)
-    const badgeModelIPFSData = badgeModelIPFSDataResponse ? badgeModelIPFSDataResponse.result?.content : null
+    // get ipfs data of badge model
+    const { result: badgeModelIPFSDataResult, error: badgeModelIPFSDataError } = await getFromIPFS<
+      BadgeModelMetadata<BackendFileResponse>
+    >(badgeModel?.uri)
+    if (badgeModelIPFSDataError) {
+      throw new Error('Error obtaining IPFS data of badge model')
+    }
+    const badgeModelIPFSData = badgeModelIPFSDataResult?.content
 
     // get badge model metadata
     const badgeModelMetadataResponse = await this.subgraph.badgeModelMetadataById({ id: badgeModelId })
@@ -262,21 +269,32 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     }
 
     const requiredEvidencesList = registrationUriResult?.content?.metadata?.columns as MetadataColumn[]
-    /*
-      TODO check if evidences apply to required evidences for badge model (requiredEvidencesList)
-      use zod? 
-     */
+
+    // check if evidences fulfill the evidence requirements of the badge model
+    const schema = schemaFactory(requiredEvidencesList)
+    // try {
+    const evidencesParsedObject = schema.parse(evidences)
+    // } catch (e) {
+    //   throw e // TODO add custom error parsing zod error
+    // }
+    if (!evidencesParsedObject) {
+      throw new Error('Wrong evidences sent, please check the required evidences list')
+    }
 
     // upload evidence to IPFS
-    const evidencesValues = createEvidencesValuesObject(evidences, requiredEvidencesList)
+    const evidencesValues = createEvidencesValuesObject(evidencesParsedObject, requiredEvidencesList)
     const evidenceIPFSHash = await createAndUploadBadgeEvidence(requiredEvidencesList, evidencesValues)
     if (!evidenceIPFSHash) {
       throw new Error('No evidence IPFS hash, could not upload evidence to IPFS')
     }
 
-    // prepare mint parameters
+    // encode data for kleros minting
     const klerosControllerDataEncoded = encodeIpfsEvidence(evidenceIPFSHash)
+
+    // obtain price of mint
     const mintValue = await tbContract.mintValue(badgeModelId)
+
+    // create metadata of next minted badge and upload to IPFS
     const badgeMetadataIPFSHash = await createAndUploadBadgeMetadata(
       badgeModelIPFSData as BadgeModelMetadata,
       userAddress,

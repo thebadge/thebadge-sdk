@@ -228,6 +228,8 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     if (!this.web3Provider) {
       throw new Error('You need to initialize a web3Provider to perform this transaction')
     }
+
+    // connect contract with selected chainId and signer
     const tbContract = TheBadge__factory.connect(
       contracts.TheBadge.address[this.chainId],
       this.web3Provider.getSigner(userAddress),

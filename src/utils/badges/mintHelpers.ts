@@ -1,5 +1,4 @@
 import { convertHashToValidIPFSKlerosHash, uploadToIPFS } from '@utils/ipfs'
-import { KlerosListStructure } from '@utils/kleros/generateKlerosListMetaEvidence'
 import { THE_BADGE_DAPP_URL } from '@utils/constants'
 import { BadgeEvidenceMetadata, BadgeMetadata, BadgeModelMetadata } from '@businessLogic/theBadge/BadgeMetadata'
 import { BackendFileUpload } from '@businessLogic/types'
@@ -30,7 +29,7 @@ export async function createAndUploadBadgeMetadata(
 export async function createAndUploadBadgeEvidence(
   columns: MetadataColumn[],
   values: Record<string, unknown>,
-): Promise<string | null> {
+): Promise<string> {
   const filePaths = getFilePathsFromValues(values)
   const evidenceIPFSUploaded = await uploadToIPFS<BadgeEvidenceMetadata>({
     attributes: {
@@ -49,24 +48,26 @@ export async function createAndUploadBadgeEvidence(
   return convertHashToValidIPFSKlerosHash(ipfsHash)
 }
 
-export function createKlerosValuesObject(
+export function createEvidencesValuesObject(
   data: Record<string, unknown>,
-  klerosBadgeMetadata?: KlerosListStructure | null,
+  metadataColumns?: MetadataColumn[] | null, // needed evidences list
 ): Record<string, unknown> {
   const values: Record<string, unknown> = {}
-  if (!klerosBadgeMetadata) return values
+  if (!metadataColumns) return values
   // If we change this "shape" key values, we need to update the klerosSchemaFactory on src/components/form/helpers/validators.ts
-  klerosBadgeMetadata.metadata.columns.forEach((column, i) => {
+  metadataColumns.forEach((column, i) => {
     values[`${column.label}`] = data[`${i}`]
   })
   return values
 }
 
-function getFilePathsFromValues(values: Record<string, any>) {
+function getFilePathsFromValues(values: Record<string, unknown>) {
   if (!values) return []
   const filePaths: string[] = []
   Object.keys(values).forEach((key) => {
-    if (values[key].base64File) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (values[key]?.base64File) {
       filePaths.push(`values.${key}`)
     }
   })

@@ -1,13 +1,13 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
-import { BigNumberish, constants } from 'ethers'
-import { defaultAbiCoder } from 'ethers/lib/utils'
+// import { JsonRpcProvider } from '@ethersproject/providers'
+// import { BigNumberish, constants } from 'ethers'
+// import { defaultAbiCoder } from 'ethers/lib/utils'
 import { BackendFileUpload } from '@businessLogic/types'
 import { BadgeModelMetadata, BadgeNFTAttributesType } from '@businessLogic/theBadge/BadgeMetadata'
-import { convertHashToValidIPFSKlerosHash, uploadToIPFS } from '@utils/ipfs'
+import { uploadToIPFS } from '@utils/ipfs'
 import { THE_BADGE_DAPP_URL } from '@utils/constants'
-import { MetadataColumn } from '@businessLogic/kleros/types'
-import { generateKlerosListMetaEvidence, KlerosListStructure } from '@utils/kleros/generateKlerosListMetaEvidence'
-import { Kleros__factory } from '@subgraph/generated/typechain'
+// import { MetadataColumn } from '@businessLogic/kleros/types'
+// import { generateKlerosListMetaEvidence, KlerosListStructure } from '@utils/kleros/generateKlerosListMetaEvidence'
+// import { Kleros__factory } from '@subgraph/generated/typechain'
 
 export async function createAndUploadBadgeModelMetadata(
   badgeModelName: string,

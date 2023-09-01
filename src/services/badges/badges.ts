@@ -22,7 +22,7 @@ import { TheBadge__factory } from '@subgraph/generated/typechain'
 import {
   createAndUploadBadgeEvidence,
   createAndUploadBadgeMetadata,
-  createKlerosValuesObject,
+  createEvidencesValuesObject,
   encodeIpfsEvidence,
 } from '@utils/badges/mintHelpers'
 import { BadgeModelMetadata } from '@businessLogic/theBadge/BadgeMetadata'
@@ -248,40 +248,40 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     const badgeModelMetadataResponse = await this.subgraph.badgeModelMetadataById({ id: badgeModelId })
     const badgeModelMetadata = badgeModelMetadataResponse.badgeModelKlerosMetaData
 
-    if (!badgeModelMetadata?.registrationUri) {
-      throw new Error('ERROR: no badge model metadata registration uri, please enter a valid badge model id')
+    const registrationUri = badgeModelMetadata?.registrationUri
+    if (!registrationUri) {
+      throw new Error('No badge model metadata registration uri, please enter a valid badge model id')
+    }
+    const { result: registrationUriResult, error: registrationUriError } = await getFromIPFS<KlerosListStructure>(
+      registrationUri,
+    )
+    if (registrationUriError) {
+      throw new Error('Could not obtain registration data from IPFS, please enter a valid model id')
     }
 
-    const badgeModelMetadataRegistrationIPFSResponse = await getFromIPFS<KlerosListStructure>(
-      badgeModelMetadata?.registrationUri,
-    )
-    const badgeModelRegistrationMetadata = badgeModelMetadataRegistrationIPFSResponse
-      ? badgeModelMetadataRegistrationIPFSResponse.result?.content
-      : null
-
+    const requiredEvidencesList = registrationUriResult?.content?.metadata?.columns as MetadataColumn[]
     /*
-      TODO check if evidences apply to required evidences for badge model
+      TODO check if evidences apply to required evidences for badge model (requiredEvidencesList)
+      use zod? 
      */
 
-    const values = createKlerosValuesObject(evidences, badgeModelRegistrationMetadata)
-
-    const evidenceIPFSHash = await createAndUploadBadgeEvidence(
-      badgeModelRegistrationMetadata?.metadata.columns as MetadataColumn[],
-      values,
-    )
+    // upload evidence to IPFS
+    const evidencesValues = createEvidencesValuesObject(evidences, requiredEvidencesList)
+    const evidenceIPFSHash = await createAndUploadBadgeEvidence(requiredEvidencesList, evidencesValues)
     if (!evidenceIPFSHash) {
       throw new Error('No evidence IPFS hash, could not upload evidence to IPFS')
     }
 
+    // prepare mint parameters
     const klerosControllerDataEncoded = encodeIpfsEvidence(evidenceIPFSHash)
-
     const mintValue = await tbContract.mintValue(badgeModelId)
-
     const badgeMetadataIPFSHash = await createAndUploadBadgeMetadata(
       badgeModelIPFSData as BadgeModelMetadata,
       userAddress,
       { imageBase64File: base64PreviewImage },
     )
+
+    // mint badge
     return tbContract.mint(badgeModelId, userAddress, badgeMetadataIPFSHash, klerosControllerDataEncoded, {
       value: mintValue,
     })

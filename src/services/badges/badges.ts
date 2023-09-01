@@ -28,6 +28,7 @@ import {
 import { BadgeModelMetadata } from '@businessLogic/theBadge/BadgeMetadata'
 import { KlerosListStructure } from '@utils/kleros/generateKlerosListMetaEvidence'
 import { BackendFileResponse } from '@businessLogic/types'
+import { ContractTransaction } from 'ethers'
 
 interface BadgesServiceMethods {
   get(searchParams?: { first: number; skip: number; filter?: Badge_Filter }): Promise<BadgesQuery>
@@ -48,7 +49,7 @@ interface BadgesServiceMethods {
     badgeModelId: string,
     evidences: Record<string, unknown>,
     base64PreviewImage: string,
-  ): Promise<unknown>
+  ): Promise<ContractTransaction>
   // claim(userAddress: string, badgeId: string) TODO coming soon
   // challenge(userAddress: string, badgeId: string, evidences?: List<Evidence>) TODO coming soon
 }
@@ -223,18 +224,21 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     badgeModelId: string,
     evidences: Record<string, unknown>,
     base64PreviewImage: string,
-  ): Promise<unknown> {
+  ): Promise<ContractTransaction> {
     if (!this.web3Provider) {
-      return 'ERROR: you need to initialize a web3Provider to perform this transaction'
+      throw new Error('You need to initialize a web3Provider to perform this transaction')
     }
-    const tbContract = TheBadge__factory.connect(contracts.TheBadge.address[this.chainId], this.web3Provider)
+    const tbContract = TheBadge__factory.connect(
+      contracts.TheBadge.address[this.chainId],
+      this.web3Provider.getSigner(userAddress),
+    )
 
     // get badge model
     const badgeModelResponse = await this.subgraph.badgeModelById({ id: badgeModelId })
     const badgeModel = badgeModelResponse.badgeModel
 
     if (!badgeModel?.uri) {
-      return 'ERROR: no badge model uri'
+      throw new Error('No badge model uri, please enter a valid badge model id')
     }
 
     const badgeModelIPFSDataResponse = await getFromIPFS<BadgeModelMetadata<BackendFileResponse>>(badgeModel?.uri)
@@ -245,7 +249,7 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     const badgeModelMetadata = badgeModelMetadataResponse.badgeModelKlerosMetaData
 
     if (!badgeModelMetadata?.registrationUri) {
-      return 'ERROR: no badge model metadata registration uri'
+      throw new Error('ERROR: no badge model metadata registration uri, please enter a valid badge model id')
     }
 
     const badgeModelMetadataRegistrationIPFSResponse = await getFromIPFS<KlerosListStructure>(
@@ -266,7 +270,7 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
       values,
     )
     if (!evidenceIPFSHash) {
-      return 'ERROR: no evidence IPFS hash'
+      throw new Error('No evidence IPFS hash, could not upload evidence to IPFS')
     }
 
     const klerosControllerDataEncoded = encodeIpfsEvidence(evidenceIPFSHash)

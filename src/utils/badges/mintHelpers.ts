@@ -41,7 +41,12 @@ export async function createAndUploadBadgeEvidence(
     filePaths: filePaths,
   })
 
-  return convertHashToValidIPFSKlerosHash(evidenceIPFSUploaded.result?.ipfsHash)
+  const ipfsHash = evidenceIPFSUploaded.result?.ipfsHash
+  if (!ipfsHash) {
+    throw new Error('Evidence could not be uploaded to IPFS.')
+  }
+
+  return convertHashToValidIPFSKlerosHash(ipfsHash)
 }
 
 export function createKlerosValuesObject(

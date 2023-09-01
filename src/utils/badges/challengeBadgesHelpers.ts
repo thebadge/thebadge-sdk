@@ -20,5 +20,10 @@ export async function createAndUploadChallengeEvidence(
     filePaths: attachment ? ['fileURI'] : [],
   })
 
-  return convertHashToValidIPFSKlerosHash(evidenceIPFSUploaded.result?.ipfsHash)
+  const ipfsHash = evidenceIPFSUploaded.result?.ipfsHash
+  if (!ipfsHash) {
+    throw new Error('Evidence could not be uploaded to IPFS.')
+  }
+
+  return convertHashToValidIPFSKlerosHash(ipfsHash)
 }

@@ -45,13 +45,6 @@ function getZValidator(fieldType: KLEROS_LIST_TYPES) {
   }
 }
 
-export function isMetadataColumnArray(obj: any): obj is MetadataColumn[] {
-  if (obj !== null && typeof obj === 'object' && obj.length > 0) {
-    return 'type' in obj[0]
-  }
-  return false
-}
-
 export function schemaFactory(fields: MetadataColumn[]) {
   const shape: { [key: string]: ZodType } = {}
   fields.forEach((field, i) => {

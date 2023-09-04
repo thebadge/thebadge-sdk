@@ -217,13 +217,13 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
    *
    * @param userAddress
    * @param badgeModelId
-   * @param evidences
+   * @param evidences is an object with { evidenceIndex: evidenceValue }, example: { 0: 'text1', 1: 'text2', 2: date1 }
    * @param base64PreviewImage
    */
   public async mint(
     userAddress: string,
     badgeModelId: string,
-    evidences: Record<number, unknown>, // { evidenceIndex: evidenceValue }, example: { 0: 'text1', 1: 'text2', 2: date1 }
+    evidences: Record<number, unknown>,
     base64PreviewImage: string,
   ): Promise<ContractTransaction> {
     if (!this.web3Provider) {

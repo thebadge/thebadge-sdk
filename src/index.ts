@@ -13,6 +13,14 @@ class TheBadgeSDK extends TheBadgeSDKConfig {
   public readonly users: UsersService
 
   /**
+   * Return list of ids of chains supported
+   * @returns boolean
+   */
+  public static getSupportedChainIds() {
+    return super.getSupportedChainIds()
+  }
+
+  /**
    * Check if a chain is supported by this SDK by giving its id
    * @param chainId
    * @returns boolean

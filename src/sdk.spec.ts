@@ -1,9 +1,15 @@
 import { RPCProvider, TheBadgeSDK, TheBadgeSDKPermissions } from './index'
 import { Web3Provider } from '@ethersproject/providers'
+import { SupportedChains } from '@businessLogic/chains'
 
 describe('TheBadgeSDK', () => {
   const infuraProvider = { name: RPCProvider.infura, token: '' }
   const alchemyProvider = { name: RPCProvider.alchemy, token: '' }
+  let sampleSDK: TheBadgeSDK
+
+  beforeEach(() => {
+    sampleSDK = new TheBadgeSDK(5, { rpcProviderConfig: infuraProvider })
+  })
 
   it('should check if a chain id is supported or not', () => {
     expect(TheBadgeSDK.isChainSupported(5)).toBeTruthy() // goerli is supported
@@ -41,18 +47,31 @@ describe('TheBadgeSDK', () => {
   })
 
   it('should initialize the needed services correctly', () => {
-    const sdk = new TheBadgeSDK(5, { rpcProviderConfig: infuraProvider })
-
     // badges service
-    expect(sdk.badges).not.toBeUndefined()
-    expect(sdk.badges.get).not.toBeUndefined()
+    expect(sampleSDK.badges).not.toBeUndefined()
+    expect(sampleSDK.badges.get).not.toBeUndefined()
 
     // badge models service
-    expect(sdk.badgeModels).not.toBeUndefined()
-    expect(sdk.badgeModels.get).not.toBeUndefined()
+    expect(sampleSDK.badgeModels).not.toBeUndefined()
+    expect(sampleSDK.badgeModels.get).not.toBeUndefined()
 
     // users service
-    expect(sdk.users).not.toBeUndefined()
-    expect(sdk.users.getIds).not.toBeUndefined()
+    expect(sampleSDK.users).not.toBeUndefined()
+    expect(sampleSDK.users.getIds).not.toBeUndefined()
+  })
+
+  it('should return the supported chain ids', () => {
+    const supportedChainIds = Object.values(SupportedChains) as Array<number>
+    expect(TheBadgeSDK.getSupportedChainIds()).toEqual(supportedChainIds)
+  })
+
+  it.each([
+    ['Goerli', SupportedChains.goerli, true],
+    ['Sepolia', SupportedChains.sepolia, true],
+    ['Gnosis', SupportedChains.gnosis, true],
+    ['Eth Mainnet', 1, false],
+    ['Avalanche', 43114, false],
+  ])('should check that chain %s (id: %s) is supported: %s', (chainName, chainId, isSupported) => {
+    expect(TheBadgeSDK.isChainSupported(chainId)).toBe(isSupported)
   })
 })

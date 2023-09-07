@@ -39,7 +39,11 @@ export abstract class TheBadgeSDKConfig {
     this.subgraph = getSubgraph(this.chainId, this.devMode)
   }
 
+  protected static getSupportedChainIds(): Array<number> {
+    return Object.values(SupportedChains) as Array<number>
+  }
+
   protected static isChainSupported(chainId: number): boolean {
-    return (Object.values(SupportedChains) as number[]).includes(chainId)
+    return this.getSupportedChainIds().includes(chainId)
   }
 }

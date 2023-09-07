@@ -55,3 +55,20 @@ const sdkInstance = new TheBadgeSDK(
   }
 )
 ```
+
+## Supported chains
+
+Get the list of supported chain ids:
+```
+TheBadgeSDK.getSupportedChainIds()
+```
+
+Check if a chain is supported:
+```
+TheBadgeSDK.isChainSupported(chainId)
+```
+
+## Sources of information
+
+- [Used smart contracts deployed](./src/contracts/contracts.ts)
+- [Used subgraphs](./src/subgraph/endpoints.ts)

@@ -1,13 +1,15 @@
-import { THE_BADGE_THE_GRAPH_BASE_URL } from '../utils/constants'
-
 // subgraph URLs
+
+// Goerli
 const GOERLI_SG_URL_DEV = 'https://api.thegraph.com/subgraphs/name/thebadgeadmin/thebadge-goerli-dev'
 const GOERLI_SG_URL_QA = 'https://api.thegraph.com/subgraphs/name/thebadgeadmin/thebadge-goerli-staging'
+
+// Sepolia
 const SEPOLIA_SG_URL_DEV = 'https://api.studio.thegraph.com/query/51391/thebadge-sepolia-dev/version/latest'
 const SEPOLIA_SG_URL_QA = 'https://api.studio.thegraph.com/query/51391/thebadge-sepolia-staging/version/latest'
 
-// TODO replace with PROD url (THE_BADGE_THE_GRAPH_BASE_URL + 'prod') when it is available
-const ETH_GRAPH_URL_PROD = GOERLI_SG_URL_QA
+// TODO replace with ETH PROD url when it is available
+const ETH_GRAPH_URL_PROD = SEPOLIA_SG_URL_QA
 
 export enum SubgraphName {
   TheBadge = 'theBadge',

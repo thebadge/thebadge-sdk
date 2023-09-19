@@ -17,8 +17,6 @@ import {
 import { TheBadgeSDKConfig } from '@businessLogic/sdk/config'
 import { getFromIPFS } from '@utils/ipfs'
 import { MetadataColumn } from '@businessLogic/kleros/types'
-import { contracts } from '../../contracts/contracts'
-import { TheBadge__factory } from '@subgraph/generated/typechain'
 import {
   createAndUploadBadgeEvidence,
   createAndUploadBadgeMetadata,
@@ -51,7 +49,7 @@ interface BadgesServiceMethods {
     evidences: Record<string, unknown>,
     base64PreviewImage: string,
   ): Promise<ContractTransaction>
-  // claim(userAddress: string, badgeId: string) TODO coming soon
+  claim(userAddress: string, badgeId: string): void
   // challenge(userAddress: string, badgeId: string, evidences?: List<Evidence>) TODO coming soon
 }
 
@@ -226,15 +224,8 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     evidences: Record<number, unknown>,
     base64PreviewImage: string,
   ): Promise<ContractTransaction> {
-    if (!this.web3Provider) {
-      throw new Error('You need to initialize a web3Provider to perform this transaction')
-    }
-
     // connect contract with selected chainId and signer
-    const tbContract = TheBadge__factory.connect(
-      contracts.TheBadge.address[this.chainId],
-      this.web3Provider.getSigner(userAddress),
-    )
+    const tbContract = this.getTBContractInstance(userAddress)
 
     // get badge model
     const badgeModelResponse = await this.subgraph.badgeModelById({ id: badgeModelId })
@@ -305,5 +296,18 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     return tbContract.mint(badgeModelId, userAddress, badgeMetadataIPFSHash, klerosControllerDataEncoded, {
       value: mintValue,
     })
+  }
+
+  /**
+   * Claim a badge that has been already minted
+   *
+   * @param userAddress
+   * @param badgeId
+   * @param extraArgs (optional)
+   */
+  public async claim(userAddress: string, badgeId: string, extraArgs = '0x'): Promise<string> {
+    const theBadgeContract = this.getTBContractInstance(userAddress)
+    const claimResult = await theBadgeContract.claim(badgeId, extraArgs)
+    return claimResult.hash
   }
 }

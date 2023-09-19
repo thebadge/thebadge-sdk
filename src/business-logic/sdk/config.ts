@@ -8,7 +8,9 @@ import {
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import { getSubgraph } from '@subgraph/subgraph'
 import { getSdk } from '@subgraph/generated/subgraph'
+import { TheBadge__factory, TheBadge } from '@subgraph/generated/typechain'
 import nullthrows from 'nullthrows'
+import { contracts } from '../../contracts/contracts'
 
 export type TheBadgeSDKConfigOptions = {
   rpcProviderConfig: RPCProviderConfig
@@ -45,5 +47,15 @@ export abstract class TheBadgeSDKConfig {
 
   protected static isChainSupported(chainId: number): boolean {
     return this.getSupportedChainIds().includes(chainId)
+  }
+
+  protected getTBContractInstance(userAddress: string): TheBadge {
+    if (!this.web3Provider) {
+      throw new Error('You need to initialize a web3Provider to perform this transaction')
+    }
+    return TheBadge__factory.connect(
+      contracts.TheBadge.address[this.chainId],
+      this.web3Provider?.getSigner(userAddress),
+    )
   }
 }

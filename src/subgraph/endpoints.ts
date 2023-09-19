@@ -3,7 +3,7 @@ import { THE_BADGE_THE_GRAPH_BASE_URL } from '../utils/constants'
 // subgraph URLs
 const GOERLI_SG_URL_DEV = THE_BADGE_THE_GRAPH_BASE_URL + 'develop'
 const GOERLI_SG_URL_QA = THE_BADGE_THE_GRAPH_BASE_URL + 'staging'
-const SEPOLIA_SG_URL = 'https://api.studio.thegraph.com/query/51391/thebadge-dev/version/latest'
+const SEPOLIA_SG_URL = 'https://api.studio.thegraph.com/query/51391/thebadge-sepolia-staging/version/latest'
 
 // TODO replace with PROD url (THE_BADGE_THE_GRAPH_BASE_URL + 'prod') when it is available
 const ETH_GRAPH_URL_PROD = GOERLI_SG_URL_QA

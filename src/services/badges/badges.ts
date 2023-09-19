@@ -217,6 +217,7 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
    * @param badgeModelId
    * @param evidences is an object with { evidenceIndex: evidenceValue }, example: { 0: 'text1', 1: 'text2', 2: date1 }
    * @param base64PreviewImage
+   * @returns contract transaction
    */
   public async mint(
     userAddress: string,
@@ -304,6 +305,7 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
    * @param userAddress
    * @param badgeId
    * @param extraArgs (optional)
+   * @returns string with the hash of the transaction
    */
   public async claim(userAddress: string, badgeId: string, extraArgs = '0x'): Promise<string> {
     const theBadgeContract = this.getTBContractInstance(userAddress)

@@ -49,7 +49,7 @@ interface BadgesServiceMethods {
     evidences: Record<string, unknown>,
     base64PreviewImage: string,
   ): Promise<ContractTransaction>
-  claim(userAddress: string, badgeId: string): void
+  claim(userAddress: string, badgeId: string): Promise<string>
   // challenge(userAddress: string, badgeId: string, evidences?: List<Evidence>) TODO coming soon
 }
 

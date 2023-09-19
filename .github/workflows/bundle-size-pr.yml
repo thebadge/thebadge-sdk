@@ -24,9 +24,6 @@ jobs:
       - name: Install modules
         run: yarn
 
-      - name: Install npx
-        run: npm install npx
-
       - name: Generate types
         run: yarn types-gen
 

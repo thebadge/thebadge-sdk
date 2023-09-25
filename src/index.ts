@@ -1,5 +1,5 @@
 import { RPCProvider, SupportedChainsValues, RPCProviderConfig } from '@businessLogic/chains'
-import { BadgeStatus } from '@subgraph/generated/subgraph'
+import { BadgeStatus } from '@subgraph/prod/generated/subgraph'
 import { Web3Provider } from '@ethersproject/providers'
 import { BadgesService } from './services/badges/badges'
 import { BadgeModelsService } from './services/badgeModels/badgeModels'

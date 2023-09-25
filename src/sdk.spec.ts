@@ -13,7 +13,8 @@ describe('TheBadgeSDK', () => {
 
   it('should check if a chain id is supported or not', () => {
     expect(TheBadgeSDK.isChainSupported(5)).toBeTruthy() // goerli is supported
-    expect(TheBadgeSDK.isChainSupported(100)).toBeTruthy() // gnosis is supported
+    expect(TheBadgeSDK.isChainSupported(11155111)).toBeTruthy() // sepolia is supported
+    expect(TheBadgeSDK.isChainSupported(100)).toBeFalsy() // gnosis is not yet supported
     expect(TheBadgeSDK.isChainSupported(42161)).toBeFalsy() // arbitrum is not supported
     expect(TheBadgeSDK.isChainSupported(56)).toBeFalsy() // bnb is not supported
   })
@@ -25,9 +26,8 @@ describe('TheBadgeSDK', () => {
     expect(sdk1.isDevMode()).toBeFalsy()
     expect(sdk1.getWeb3Provider()).toBeUndefined()
     expect(sdk1.getPermissions()).toBe(TheBadgeSDKPermissions.READ_ONLY)
-
-    const sdk2 = new TheBadgeSDK(100, { rpcProviderConfig: alchemyProvider })
-    expect(sdk2.getChainId()).toBe(100)
+    const sdk2 = new TheBadgeSDK(11155111, { rpcProviderConfig: alchemyProvider })
+    expect(sdk2.getChainId()).toBe(11155111)
     expect(sdk2.getRPCProviderName()).toBe(RPCProvider.alchemy)
     expect(sdk2.isDevMode()).toBeFalsy()
     expect(sdk2.getWeb3Provider()).toBeUndefined()
@@ -68,8 +68,8 @@ describe('TheBadgeSDK', () => {
   it.each([
     ['Goerli', SupportedChains.goerli, true],
     ['Sepolia', SupportedChains.sepolia, true],
-    ['Gnosis', SupportedChains.gnosis, true],
-    ['Eth Mainnet', 1, false],
+    ['Gnosis', 100, false], // not yet supported
+    ['Eth Mainnet', 1, false], // not yet supported
     ['Avalanche', 43114, false],
   ])('should check that chain %s (id: %s) is supported: %s', (chainName, chainId, isSupported) => {
     expect(TheBadgeSDK.isChainSupported(chainId)).toBe(isSupported)

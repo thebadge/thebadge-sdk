@@ -5,5 +5,5 @@ const queriesPath = 'src/subgraph/dev/queries/**/*.ts'
 const codegenOutDir = './src/subgraph/dev/generated/subgraph.ts'
 
 module.exports = {
-  ...codegenConfig(endpoints, queriesPath, codegenOutDir)
+  ...codegenConfig(endpoints, queriesPath, codegenOutDir),
 }

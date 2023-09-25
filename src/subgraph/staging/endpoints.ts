@@ -18,7 +18,7 @@ export default {
   },
   11155111: {
     chainName: 'Sepolia (Ethereum testnet)',
-    urls: SEPOLIA_SG_URL_QA,
+    url: SEPOLIA_SG_URL_QA,
   },
   // 80001: {
   //   chainName: 'Mumbai (Polygon testnet)',

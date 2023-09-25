@@ -5,7 +5,7 @@ export const SupportedChains = {
   //mainnet: 1,
   goerli: 5,
   sepolia: 11155111,
-  gnosis: 100,
+  // gnosis: 100,
 } as const
 
 export type SupportedChainsValues = ObjectValues<typeof SupportedChains>
@@ -27,12 +27,12 @@ export const providerChains: ProviderChains = {
   [RPCProvider.infura]: {
     [SupportedChains.goerli]: 'goerli',
     [SupportedChains.sepolia]: 'sepolia',
-    [SupportedChains.gnosis]: 'gnosis',
+    // [SupportedChains.gnosis]: 'gnosis',
   },
   [RPCProvider.alchemy]: {
     [SupportedChains.goerli]: 'eth-goerli',
     [SupportedChains.sepolia]: 'eth-sepolia',
-    [SupportedChains.gnosis]: 'xDai-gnosis',
+    // [SupportedChains.gnosis]: 'xDai-gnosis',
   },
 }
 
@@ -57,7 +57,7 @@ export type ChainConfig = {
   id: SupportedChainsValues
   name: string
   shortName: string
-  isTestnet: boolean,
+  isTestnet: boolean
   chainId: SupportedChainsValues
   chainIdHex: string
   rpcUrl: string
@@ -89,17 +89,17 @@ export function getChainsConfig(rpcProviderConfig: RPCProviderConfig): Record<Su
       token: 'ETH',
       isTestnet: true,
     },
-    [SupportedChains.gnosis]: {
-      id: 100,
-      name: 'Gnosis Chain',
-      shortName: 'xDai',
-      chainId: SupportedChains.gnosis,
-      chainIdHex: '0x64',
-      rpcUrl: getProviderUrl(SupportedChains.gnosis, rpcProviderConfig),
-      blockExplorerUrls: ['https://gnosisscan.io/'],
-      token: 'xDAI',
-      isTestnet: false,
-    },
+    // [SupportedChains.gnosis]: {
+    //   id: 100,
+    //   name: 'Gnosis Chain',
+    //   shortName: 'xDai',
+    //   chainId: SupportedChains.gnosis,
+    //   chainIdHex: '0x64',
+    //   rpcUrl: getProviderUrl(SupportedChains.gnosis, rpcProviderConfig),
+    //   blockExplorerUrls: ['https://gnosisscan.io/'],
+    //   token: 'xDAI',
+    //   isTestnet: false,
+    // },
     // [SupportedChains.mainnet]: {
     //   id: Chains.mainnet,
     //   name: 'Mainnet',

@@ -13,7 +13,7 @@ export type ChainsKeys = keyof typeof SupportedChains
 
 export type RPCProviderConfig = {
   name: RPCProvider
-  token: string
+  apiKey: string
 }
 
 export enum RPCProvider {
@@ -36,18 +36,18 @@ export const providerChains: ProviderChains = {
   },
 }
 
-const getInfuraRPCUrl = (chainId: SupportedChainsValues, token: string): string =>
-  `https://${providerChains[RPCProvider.infura][chainId]}.infura.io/v3/${token}`
+const getInfuraRPCUrl = (chainId: SupportedChainsValues, apiKey: string): string =>
+  `https://${providerChains[RPCProvider.infura][chainId]}.infura.io/v3/${apiKey}`
 
-const getAlchemyRPCUrl = (chainId: SupportedChainsValues, token: string): string =>
-  `https://${providerChains[RPCProvider.alchemy][chainId]}.g.alchemy.com/v2/${token}`
+const getAlchemyRPCUrl = (chainId: SupportedChainsValues, apiKey: string): string =>
+  `https://${providerChains[RPCProvider.alchemy][chainId]}.g.alchemy.com/v2/${apiKey}`
 
 export const getProviderUrl = (chainId: SupportedChainsValues, rpcProviderConfig: RPCProviderConfig): string => {
   switch (rpcProviderConfig.name) {
     case RPCProvider.infura:
-      return getInfuraRPCUrl(chainId, rpcProviderConfig.token)
+      return getInfuraRPCUrl(chainId, rpcProviderConfig.apiKey)
     case RPCProvider.alchemy:
-      return getAlchemyRPCUrl(chainId, rpcProviderConfig.token)
+      return getAlchemyRPCUrl(chainId, rpcProviderConfig.apiKey)
     default:
       return ''
   }

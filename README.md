@@ -42,8 +42,8 @@ const sdkInstance = new TheBadgeSDK(
       // your desired provider: 'infura' or 'alchemy'
       name: 'infura',
     
-      // your provider token
-      token: '00000000000000', 
+      // your provider apiKey
+      apiKey: '00000000000000', 
     }, 
         
     // OPTIONAL: web3Provider instance, needed for write methods e.g. mint badge

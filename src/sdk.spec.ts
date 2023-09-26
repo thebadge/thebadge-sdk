@@ -1,10 +1,10 @@
-import { RPCProvider, TheBadgeSDK, TheBadgeSDKPermissions } from './index'
+import { RPCProvider, RPCProviderConfig, TheBadgeSDK, TheBadgeSDKPermissions } from './index'
 import { Web3Provider } from '@ethersproject/providers'
 import { SupportedChains } from '@businessLogic/chains'
 
 describe('TheBadgeSDK', () => {
-  const infuraProvider = { name: RPCProvider.infura, token: '' }
-  const alchemyProvider = { name: RPCProvider.alchemy, token: '' }
+  const infuraProvider: RPCProviderConfig = { name: RPCProvider.infura, apiKey: '' }
+  const alchemyProvider: RPCProviderConfig = { name: RPCProvider.alchemy, apiKey: '' }
   let sampleSDK: TheBadgeSDK
 
   beforeEach(() => {

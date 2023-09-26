@@ -34,9 +34,9 @@ class TheBadgeSDK extends TheBadgeSDKConfig {
    *
    * @param chainId is a number indicating the id of the chain to be used
    * @param config:
-   * - rpcProviderConfig provides the configuration for the read only provider: (name, token)
+   * - rpcProviderConfig provides the configuration for the read only provider: (name, apiKey)
    *      - name: string (for now only available 'infura' or 'alchemy'),
-   *      - token: string
+   *      - apiKey: string
    * - web3Provider is an optional parameter with the web 3 provider to perform write requests to a contract
    * - devMode is an optional parameter to use DEV data if the selected chain supports it
    */

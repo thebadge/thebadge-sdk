@@ -42,7 +42,7 @@ const sdkInstance = new TheBadgeSDK(
       // your desired provider: 'infura' or 'alchemy'
       name: 'infura',
     
-      // your provider apiKey
+      // your infura/alchemy apiKey
       apiKey: '00000000000000', 
     }, 
         

@@ -24,7 +24,7 @@ junit.xml
 *.pem
 tsconfig.tsbuildinfo
 .eslintcache
-src/*/generated/
+src/*/generated/*
 
 # debug
 /logs

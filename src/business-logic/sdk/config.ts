@@ -14,6 +14,7 @@ import { getProdSubgraph } from '@subgraph/prod/subgraph'
 import { Sdk } from '@subgraph/common'
 import { contracts } from '../../contracts/contracts'
 import { TheBadge__factory, TheBadge } from '../../contracts/generated/typechain'
+import fs from 'fs'
 
 export type TheBadgeSDKConfigOptions = {
   rpcProviderConfig: RPCProviderConfig
@@ -61,14 +62,34 @@ export abstract class TheBadgeSDKConfig {
   }
 
   private getSubgraph(networkConfig: ChainConfig): ReturnType<Sdk> {
+    const fakeGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/fakeGeneratedSubgraph.ts')
+
     if (networkConfig.isTestnet) {
       if (this.devMode) {
-        return getDevSubgraph(this.chainId)
+        // dev subgraph
+        const devGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/dev/generated/subgraph.ts')
+        if (!devGeneratedSubgraphContent.equals(fakeGeneratedSubgraphContent)) {
+          return getDevSubgraph(this.chainId)
+        } else {
+          throw new Error('No dev subgraph')
+        }
       } else {
-        return getStagingSubgraph(this.chainId)
+        // staging subgraph
+        const stagingGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/staging/generated/subgraph.ts')
+        if (!stagingGeneratedSubgraphContent.equals(fakeGeneratedSubgraphContent)) {
+          return getStagingSubgraph(this.chainId)
+        } else {
+          throw new Error('No staging subgraph')
+        }
       }
     } else {
-      return getProdSubgraph(this.chainId)
+      // prod subgraph
+      const prodGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/staging/generated/subgraph.ts')
+      if (!prodGeneratedSubgraphContent.equals(fakeGeneratedSubgraphContent)) {
+        return getProdSubgraph(this.chainId)
+      } else {
+        throw new Error('No prod subgraph')
+      }
     }
   }
 }

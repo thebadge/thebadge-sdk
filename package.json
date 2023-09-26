@@ -17,7 +17,7 @@
     "subgraph-codegen:dev": "graphql-codegen --config src/subgraph/dev/codegen.ts",
     "subgraph-codegen:staging": "graphql-codegen --config src/subgraph/staging/codegen.ts",
     "subgraph-codegen:prod": "graphql-codegen --config src/subgraph/prod/codegen.ts",
-    "subgraph-codegen": "yarn subgraph-codegen:prod && yarn subgraph-codegen:staging && yarn subgraph-codegen:dev",
+    "subgraph-codegen": "sh ./src/subgraph/generateSubgraphs.sh",
     "test": "jest --verbose --debug",
     "test:quick": "jest --collectCoverage=false --env=jsdom --silent",
     "test:watch": "jest --collectCoverage=false --env=jsdom --watch --silent",

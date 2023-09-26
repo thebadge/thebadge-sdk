@@ -13,7 +13,6 @@ function getSchemas(endpoints: object) {
 
 export function codegenConfig(endpoints: object, queriesPath: string, outDir: string) {
   const schemas = getSchemas(endpoints)
-  console.log('schemas', schemas)
   return {
     overwrite: true,
     schema: schemas,

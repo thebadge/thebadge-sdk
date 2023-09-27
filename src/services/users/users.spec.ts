@@ -5,7 +5,7 @@ describe('UsersService', () => {
   it('should check service initialization', () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const usersService = new UsersService(5, { rpcProviderConfig: { name: RPCProvider.infura, token: '' } })
+    const usersService = new UsersService(5, { rpcProviderConfig: { name: RPCProvider.infura, apiKey: '' } })
     expect(usersService).not.toBeUndefined()
     expect('get' in usersService).toBeFalsy()
     expect('getIds' in usersService).toBeTruthy()

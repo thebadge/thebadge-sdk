@@ -10,7 +10,7 @@ import {
   UserBadgesInReviewQuery,
   UserBadgesInReviewOrChallengedQuery,
   UserBadgesExpiringBetweenQuery,
-} from '@subgraph/generated/subgraph'
+} from '@subgraph/prod/generated/subgraph'
 import { TheBadgeSDKConfig } from '@businessLogic/sdk/config'
 
 interface UsersServiceMethods {

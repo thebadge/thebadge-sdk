@@ -40,10 +40,10 @@ const sdkInstance = new TheBadgeSDK(
     // read only provider
     rpcProviderConfig: {
       // your desired provider: 'infura' or 'alchemy'
-      name: RPCProviders.infura,
+      name: 'infura',
     
-      // your provider token
-      token: '00000000000000', 
+      // your infura/alchemy apiKey
+      apiKey: '00000000000000', 
     }, 
         
     // OPTIONAL: web3Provider instance, needed for write methods e.g. mint badge
@@ -66,9 +66,13 @@ TheBadgeSDK.getSupportedChainIds()
 Check if a chain is supported:
 ```
 TheBadgeSDK.isChainSupported(chainId)
+// chainId is a number, for example: 1, 5, etc
 ```
 
 ## Sources of information
 
 - [Used smart contracts deployed](./src/contracts/contracts.ts)
-- [Used subgraphs](./src/subgraph/endpoints.ts)
+- Subgraphs: 
+  - [dev subgraphs urls](src/subgraph/dev/endpoints.ts)
+  - [staging subgraphs urls](src/subgraph/staging/endpoints.ts)
+  - [prod subgraphs urls](src/subgraph/prod/endpoints.ts)

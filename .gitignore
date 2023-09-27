@@ -24,7 +24,7 @@ junit.xml
 *.pem
 tsconfig.tsbuildinfo
 .eslintcache
-src/subgraph/generated/
+src/**/generated/*
 
 # debug
 /logs
@@ -42,9 +42,6 @@ yarn-error.log*
 
 # vercel
 .vercel
-
-#types
-/src/business-logic/typechain
 
 #IDE files
 .idea/**

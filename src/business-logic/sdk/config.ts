@@ -1,4 +1,5 @@
 import {
+  ChainConfig,
   getNetworkConfig,
   RPCProvider,
   RPCProviderConfig,
@@ -6,11 +7,14 @@ import {
   SupportedChainsValues,
 } from '@businessLogic/chains'
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
-import { getSubgraph } from '@subgraph/subgraph'
-import { getSdk } from '@subgraph/generated/subgraph'
-import { TheBadge__factory, TheBadge } from '@subgraph/generated/typechain'
 import nullthrows from 'nullthrows'
+import { getDevSubgraph } from '@subgraph/dev/subgraph'
+import { getStagingSubgraph } from '@subgraph/staging/subgraph'
+import { getProdSubgraph } from '@subgraph/prod/subgraph'
+import { Sdk } from '@subgraph/common'
 import { contracts } from '../../contracts/contracts'
+import { TheBadge__factory, TheBadge } from '../../contracts/generated/typechain'
+import fs from 'fs'
 
 export type TheBadgeSDKConfigOptions = {
   rpcProviderConfig: RPCProviderConfig
@@ -23,22 +27,20 @@ export abstract class TheBadgeSDKConfig {
   protected readonly rpcProviderName: RPCProvider
   protected readonly readOnlyProvider: JsonRpcProvider
   protected readonly web3Provider: Web3Provider | undefined
-  protected readonly subgraph: ReturnType<typeof getSdk>
+  protected readonly subgraph: ReturnType<Sdk>
   protected readonly devMode: boolean
 
   protected constructor(chainId: SupportedChainsValues, config: TheBadgeSDKConfigOptions) {
     nullthrows(TheBadgeSDKConfig.isChainSupported(chainId) ? chainId : null, `Chain ID ${chainId} is not supported`)
-    const defaultReadOnlyProvider = new JsonRpcProvider(
-      getNetworkConfig(chainId, config.rpcProviderConfig)?.rpcUrl,
-      chainId,
-    )
+
+    const networkConfig = getNetworkConfig(chainId, config.rpcProviderConfig)
+    const defaultReadOnlyProvider = new JsonRpcProvider(networkConfig?.rpcUrl, chainId)
     this.chainId = chainId
     this.rpcProviderName = config.rpcProviderConfig.name
     this.readOnlyProvider = defaultReadOnlyProvider
     this.web3Provider = config.web3Provider
     this.devMode = !!config.devMode
-
-    this.subgraph = getSubgraph(this.chainId, this.devMode)
+    this.subgraph = this.getSubgraph(networkConfig)
   }
 
   protected static getSupportedChainIds(): Array<number> {
@@ -57,5 +59,37 @@ export abstract class TheBadgeSDKConfig {
       contracts.TheBadge.address[this.chainId],
       this.web3Provider?.getSigner(userAddress),
     )
+  }
+
+  private getSubgraph(networkConfig: ChainConfig): ReturnType<Sdk> {
+    const fakeGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/fakeGeneratedSubgraph.ts')
+
+    if (networkConfig.isTestnet) {
+      if (this.devMode) {
+        // dev subgraph
+        const devGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/dev/generated/subgraph.ts')
+        if (!devGeneratedSubgraphContent.equals(fakeGeneratedSubgraphContent)) {
+          return getDevSubgraph(this.chainId)
+        } else {
+          throw new Error('No dev subgraph')
+        }
+      } else {
+        // staging subgraph
+        const stagingGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/staging/generated/subgraph.ts')
+        if (!stagingGeneratedSubgraphContent.equals(fakeGeneratedSubgraphContent)) {
+          return getStagingSubgraph(this.chainId)
+        } else {
+          throw new Error('No staging subgraph')
+        }
+      }
+    } else {
+      // prod subgraph
+      const prodGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/staging/generated/subgraph.ts')
+      if (!prodGeneratedSubgraphContent.equals(fakeGeneratedSubgraphContent)) {
+        return getProdSubgraph(this.chainId)
+      } else {
+        throw new Error('No prod subgraph')
+      }
+    }
   }
 }

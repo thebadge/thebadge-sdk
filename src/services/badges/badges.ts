@@ -13,7 +13,7 @@ import {
   BadgesQuery,
   BadgeMetadataByIdQuery,
   BadgesMetadataUserHasChallengedQuery,
-} from '@subgraph/generated/subgraph'
+} from '@subgraph/prod/generated/subgraph'
 import { TheBadgeSDKConfig } from '@businessLogic/sdk/config'
 import { getFromIPFS } from '@utils/ipfs'
 import { MetadataColumn } from '@businessLogic/kleros/types'

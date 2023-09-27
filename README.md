@@ -66,6 +66,7 @@ TheBadgeSDK.getSupportedChainIds()
 Check if a chain is supported:
 ```
 TheBadgeSDK.isChainSupported(chainId)
+// chainId is a number, for example: 1, 5, etc
 ```
 
 ## Sources of information

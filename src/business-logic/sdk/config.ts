@@ -11,15 +11,21 @@ import nullthrows from 'nullthrows'
 import { getDevSubgraph } from '@subgraph/dev/subgraph'
 import { getStagingSubgraph } from '@subgraph/staging/subgraph'
 import { getProdSubgraph } from '@subgraph/prod/subgraph'
-import { Sdk } from '@subgraph/common'
 import { contracts } from '../../contracts/contracts'
 import { TheBadge__factory, TheBadge } from '../../contracts/generated/typechain'
 import fs from 'fs'
+import { Sdk } from '@subgraph/common'
 
 export type TheBadgeSDKConfigOptions = {
   rpcProviderConfig: RPCProviderConfig
   web3Provider?: Web3Provider
   devMode?: boolean
+}
+
+export enum TheBadgeSDKEnv {
+  DEVELOPMENT = 'DEVELOPMENT',
+  STAGING = 'STAGING',
+  PRODUCTION = 'PRODUCTION',
 }
 
 export abstract class TheBadgeSDKConfig {
@@ -28,7 +34,7 @@ export abstract class TheBadgeSDKConfig {
   protected readonly readOnlyProvider: JsonRpcProvider
   protected readonly web3Provider: Web3Provider | undefined
   protected readonly subgraph: ReturnType<Sdk>
-  protected readonly devMode: boolean
+  protected readonly env: TheBadgeSDKEnv
 
   protected constructor(chainId: SupportedChainsValues, config: TheBadgeSDKConfigOptions) {
     nullthrows(TheBadgeSDKConfig.isChainSupported(chainId) ? chainId : null, `Chain ID ${chainId} is not supported`)
@@ -39,8 +45,8 @@ export abstract class TheBadgeSDKConfig {
     this.rpcProviderName = config.rpcProviderConfig.name
     this.readOnlyProvider = defaultReadOnlyProvider
     this.web3Provider = config.web3Provider
-    this.devMode = !!config.devMode
-    this.subgraph = this.getSubgraph(networkConfig)
+    this.env = this.resolveEnv(!!config.devMode, networkConfig)
+    this.subgraph = this.getSubgraph()
   }
 
   protected static getSupportedChainIds(): Array<number> {
@@ -61,35 +67,39 @@ export abstract class TheBadgeSDKConfig {
     )
   }
 
-  private getSubgraph(networkConfig: ChainConfig): ReturnType<Sdk> {
+  private getSubgraph(): ReturnType<Sdk> {
     const fakeGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/fakeGeneratedSubgraph.ts')
+    let envGeneratedSubgraphContent
 
-    if (networkConfig.isTestnet) {
-      if (this.devMode) {
-        // dev subgraph
-        const devGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/dev/generated/subgraph.ts')
-        if (!devGeneratedSubgraphContent.equals(fakeGeneratedSubgraphContent)) {
-          return getDevSubgraph(this.chainId)
-        } else {
+    switch (this.env) {
+      case TheBadgeSDKEnv.DEVELOPMENT: // dev subgraph
+        envGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/dev/generated/subgraph.ts')
+        if (envGeneratedSubgraphContent.equals(fakeGeneratedSubgraphContent)) {
           throw new Error('No dev subgraph')
         }
-      } else {
-        // staging subgraph
-        const stagingGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/staging/generated/subgraph.ts')
-        if (!stagingGeneratedSubgraphContent.equals(fakeGeneratedSubgraphContent)) {
-          return getStagingSubgraph(this.chainId)
-        } else {
+        return getDevSubgraph(this.chainId)
+
+      case TheBadgeSDKEnv.STAGING: // staging subgraph
+        envGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/staging/generated/subgraph.ts')
+        if (envGeneratedSubgraphContent.equals(fakeGeneratedSubgraphContent)) {
           throw new Error('No staging subgraph')
         }
-      }
-    } else {
-      // prod subgraph
-      const prodGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/staging/generated/subgraph.ts')
-      if (!prodGeneratedSubgraphContent.equals(fakeGeneratedSubgraphContent)) {
+        return getStagingSubgraph(this.chainId)
+
+      case TheBadgeSDKEnv.PRODUCTION: // prod subgraph
+        envGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/prod/generated/subgraph.ts')
+        if (envGeneratedSubgraphContent.equals(fakeGeneratedSubgraphContent)) {
+          throw new Error('No prod subgraph')
+        }
         return getProdSubgraph(this.chainId)
-      } else {
-        throw new Error('No prod subgraph')
-      }
     }
+  }
+
+  private resolveEnv(devMode: boolean, networkConfig: ChainConfig): TheBadgeSDKEnv {
+    return networkConfig.isTestnet
+      ? devMode
+        ? TheBadgeSDKEnv.DEVELOPMENT
+        : TheBadgeSDKEnv.STAGING
+      : TheBadgeSDKEnv.PRODUCTION
   }
 }

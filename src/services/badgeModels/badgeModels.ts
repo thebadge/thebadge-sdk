@@ -1,12 +1,32 @@
 import {
-  BadgeModel_Filter,
-  BadgeModelByIdQuery,
-  BadgeModelsQuery,
-  BadgeModelMetadataByIdQuery,
+  BadgeModel_Filter as BadgeModel_Filter_DEV,
+  BadgeModelByIdQuery as BadgeModelByIdQuery_DEV,
+  BadgeModelsQuery as BadgeModelsQuery_DEV,
+  BadgeModelMetadataByIdQuery as BadgeModelMetadataByIdQuery_DEV,
+} from '@subgraph/dev/generated/subgraph'
+import {
+  BadgeModel_Filter as BadgeModel_Filter_STAGING,
+  BadgeModelByIdQuery as BadgeModelByIdQuery_STAGING,
+  BadgeModelsQuery as BadgeModelsQuery_STAGING,
+  BadgeModelMetadataByIdQuery as BadgeModelMetadataByIdQuery_STAGING,
+} from '@subgraph/staging/generated/subgraph'
+import {
+  BadgeModel_Filter as BadgeModel_Filter_PROD,
+  BadgeModelByIdQuery as BadgeModelByIdQuery_PROD,
+  BadgeModelsQuery as BadgeModelsQuery_PROD,
+  BadgeModelMetadataByIdQuery as BadgeModelMetadataByIdQuery_PROD,
 } from '@subgraph/prod/generated/subgraph'
 import { TheBadgeSDKConfig } from '@businessLogic/sdk/config'
-import { getFromIPFS } from '@utils/ipfs'
 import { MetadataColumn } from '@businessLogic/kleros/types'
+import { getFromIPFS } from '@utils/ipfs'
+
+type BadgeModel_Filter = BadgeModel_Filter_DEV | BadgeModel_Filter_STAGING | BadgeModel_Filter_PROD
+type BadgeModelByIdQuery = BadgeModelByIdQuery_DEV | BadgeModelByIdQuery_STAGING | BadgeModelByIdQuery_PROD
+type BadgeModelsQuery = BadgeModelsQuery_DEV | BadgeModelsQuery_STAGING | BadgeModelsQuery_PROD
+type BadgeModelMetadataByIdQuery =
+  | BadgeModelMetadataByIdQuery_DEV
+  | BadgeModelMetadataByIdQuery_STAGING
+  | BadgeModelMetadataByIdQuery_PROD
 
 interface BadgeModelsServiceMethods {
   get(searchParams?: { first: number; skip: number; filter?: BadgeModel_Filter }): Promise<BadgeModelsQuery>

@@ -1,4 +1,4 @@
-import { RPCProvider, RPCProviderConfig, TheBadgeSDK, TheBadgeSDKPermissions } from './index'
+import { RPCProvider, RPCProviderConfig, TheBadgeSDK, TheBadgeSDKEnv, TheBadgeSDKPermissions } from './index'
 import { Web3Provider } from '@ethersproject/providers'
 import { SupportedChains } from '@businessLogic/chains'
 
@@ -23,13 +23,14 @@ describe('TheBadgeSDK', () => {
     const sdk1 = new TheBadgeSDK(5, { rpcProviderConfig: infuraProvider })
     expect(sdk1.getChainId()).toBe(5)
     expect(sdk1.getRPCProviderName()).toBe(RPCProvider.infura)
-    expect(sdk1.isDevMode()).toBeFalsy()
+    expect(sdk1.getEnv()).toBe(TheBadgeSDKEnv.STAGING)
     expect(sdk1.getWeb3Provider()).toBeUndefined()
     expect(sdk1.getPermissions()).toBe(TheBadgeSDKPermissions.READ_ONLY)
+
     const sdk2 = new TheBadgeSDK(11155111, { rpcProviderConfig: alchemyProvider })
     expect(sdk2.getChainId()).toBe(11155111)
     expect(sdk2.getRPCProviderName()).toBe(RPCProvider.alchemy)
-    expect(sdk2.isDevMode()).toBeFalsy()
+    expect(sdk2.getEnv()).toBe(TheBadgeSDKEnv.STAGING)
     expect(sdk2.getWeb3Provider()).toBeUndefined()
     expect(sdk2.getPermissions()).toBe(TheBadgeSDKPermissions.READ_ONLY)
 
@@ -41,9 +42,11 @@ describe('TheBadgeSDK', () => {
     })
     expect(sdk3.getChainId()).toBe(5)
     expect(sdk3.getRPCProviderName()).toBe(RPCProvider.alchemy)
-    expect(sdk3.isDevMode()).toBeTruthy()
+    expect(sdk3.getEnv()).toBe(TheBadgeSDKEnv.DEVELOPMENT)
     expect(sdk3.getWeb3Provider()).not.toBeUndefined()
     expect(sdk3.getPermissions()).toBe(TheBadgeSDKPermissions.READ_AND_WRITE)
+
+    // TODO add test checking init prod sdk when a mainnet chain is available
   })
 
   it('should initialize the needed services correctly', () => {

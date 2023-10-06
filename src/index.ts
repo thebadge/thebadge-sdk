@@ -1,11 +1,15 @@
 import { RPCProvider, SupportedChainsValues, RPCProviderConfig } from '@businessLogic/chains'
-import { BadgeStatus } from '@subgraph/prod/generated/subgraph'
+import { BadgeStatus as BadgeStatus_DEV } from '@subgraph/dev/generated/subgraph'
+import { BadgeStatus as BadgeStatus_STAGING } from '@subgraph/staging/generated/subgraph'
+import { BadgeStatus as BadgeStatus_PROD } from '@subgraph/prod/generated/subgraph'
 import { Web3Provider } from '@ethersproject/providers'
 import { BadgesService } from './services/badges/badges'
 import { BadgeModelsService } from './services/badgeModels/badgeModels'
 import { UsersService } from './services/users/users'
 import { TheBadgeSDKPermissions } from '@businessLogic/sdk/permissions'
-import { TheBadgeSDKConfig, TheBadgeSDKConfigOptions } from '@businessLogic/sdk/config'
+import { TheBadgeSDKConfig, TheBadgeSDKConfigOptions, TheBadgeSDKEnv } from '@businessLogic/sdk/config'
+
+type BadgeStatus = BadgeStatus_DEV | BadgeStatus_STAGING | BadgeStatus_PROD
 
 class TheBadgeSDK extends TheBadgeSDKConfig {
   public readonly badges: BadgesService
@@ -37,8 +41,10 @@ class TheBadgeSDK extends TheBadgeSDKConfig {
    * - rpcProviderConfig provides the configuration for the read only provider: (name, apiKey)
    *      - name: string (for now only available 'infura' or 'alchemy'),
    *      - apiKey: string
-   * - web3Provider is an optional parameter with the web 3 provider to perform write requests to a contract
-   * - devMode is an optional parameter to use DEV data if the selected chain supports it
+   * - web3Provider is an optional parameter with the web3 provider to perform write requests to a contract
+   * - devMode is an @optional boolean parameter to use DEV data if the selected chain supports it:
+   *      - For testnets: if devMode is true, development env data will be used. If false, staging env data will be used.
+   *      - For mainnets: always production env data is used, no matter what value this flag has.
    */
   constructor(chainId: SupportedChainsValues, config: TheBadgeSDKConfigOptions) {
     super(chainId, config)
@@ -51,6 +57,7 @@ class TheBadgeSDK extends TheBadgeSDKConfig {
 
   /**
    * Get id of the chain used on this instance
+   *
    * @returns number
    */
   public getChainId(): SupportedChainsValues {
@@ -59,6 +66,7 @@ class TheBadgeSDK extends TheBadgeSDKConfig {
 
   /**
    * Get the name of the RPC provider (for now only 'infura' and 'alchemy' supported)
+   *
    * @returns RPCProvider
    */
   public getRPCProviderName(): RPCProvider {
@@ -67,6 +75,7 @@ class TheBadgeSDK extends TheBadgeSDKConfig {
 
   /**
    * Get the given web3Provider
+   *
    * @returns Web3Provider | undefined
    */
   public getWeb3Provider(): Web3Provider | undefined {
@@ -74,7 +83,8 @@ class TheBadgeSDK extends TheBadgeSDKConfig {
   }
 
   /**
-   * Get current permissions, options:
+   * Get current permissions
+   *
    * @returns READ_ONLY if no web3Provider was given
    * @returns READ_AND_WRITE if a web3Provider was given
    */
@@ -83,22 +93,15 @@ class TheBadgeSDK extends TheBadgeSDKConfig {
   }
 
   /**
-   * Checks if devMode is set.
-   * Important: this field only has an effect if the selected chain (from given chainId) is a testnet.
+   * Get current env
    *
-   * For testnets:
-   * If devMode is true, DEV environment data will be used.
-   * If devMode is false, QA environment data will be used.
-   *
-   * For mainnets (prod env): always production data is used, no matter what value this flag has.
-   *
-   * @returns boolean
+   * @returns TheBadgeSDKEnv (DEVELOPMENT, STAGING or PRODUCTION)
    */
-  public isDevMode(): boolean {
-    return this.devMode
+  public getEnv(): TheBadgeSDKEnv {
+    return this.env
   }
 }
 
-export { TheBadgeSDK, RPCProvider, TheBadgeSDKPermissions }
+export { TheBadgeSDK, RPCProvider, TheBadgeSDKPermissions, TheBadgeSDKEnv }
 
 export type { TheBadgeSDKConfigOptions, RPCProviderConfig, SupportedChainsValues, BadgeStatus }

@@ -1,17 +1,76 @@
 import {
-  Badge_Filter,
-  UserBadgesFilteredQuery,
-  UserQuery,
-  CreatorUsersIdQuery,
-  UsersIdQuery,
-  UserBadgesByModelIdQuery,
-  UserCreatedBadgeModelsQuery,
-  UserBadgesChallengedQuery,
-  UserBadgesInReviewQuery,
-  UserBadgesInReviewOrChallengedQuery,
-  UserBadgesExpiringBetweenQuery,
+  Badge_Filter as Badge_Filter_DEV,
+  UserBadgesFilteredQuery as UserBadgesFilteredQuery_DEV,
+  UserQuery as UserQuery_DEV,
+  CreatorUsersIdQuery as CreatorUsersIdQuery_DEV,
+  UsersIdQuery as UsersIdQuery_DEV,
+  UserBadgesByModelIdQuery as UserBadgesByModelIdQuery_DEV,
+  UserCreatedBadgeModelsQuery as UserCreatedBadgeModelsQuery_DEV,
+  UserBadgesChallengedQuery as UserBadgesChallengedQuery_DEV,
+  UserBadgesInReviewQuery as UserBadgesInReviewQuery_DEV,
+  UserBadgesInReviewOrChallengedQuery as UserBadgesInReviewOrChallengedQuery_DEV,
+  UserBadgesExpiringBetweenQuery as UserBadgesExpiringBetweenQuery_DEV,
+} from '@subgraph/dev/generated/subgraph'
+import {
+  Badge_Filter as Badge_Filter_STAGING,
+  UserBadgesFilteredQuery as UserBadgesFilteredQuery_STAGING,
+  UserQuery as UserQuery_STAGING,
+  CreatorUsersIdQuery as CreatorUsersIdQuery_STAGING,
+  UsersIdQuery as UsersIdQuery_STAGING,
+  UserBadgesByModelIdQuery as UserBadgesByModelIdQuery_STAGING,
+  UserCreatedBadgeModelsQuery as UserCreatedBadgeModelsQuery_STAGING,
+  UserBadgesChallengedQuery as UserBadgesChallengedQuery_STAGING,
+  UserBadgesInReviewQuery as UserBadgesInReviewQuery_STAGING,
+  UserBadgesInReviewOrChallengedQuery as UserBadgesInReviewOrChallengedQuery_STAGING,
+  UserBadgesExpiringBetweenQuery as UserBadgesExpiringBetweenQuery_STAGING,
+} from '@subgraph/staging/generated/subgraph'
+import {
+  Badge_Filter as Badge_Filter_PROD,
+  UserBadgesFilteredQuery as UserBadgesFilteredQuery_PROD,
+  UserQuery as UserQuery_PROD,
+  CreatorUsersIdQuery as CreatorUsersIdQuery_PROD,
+  UsersIdQuery as UsersIdQuery_PROD,
+  UserBadgesByModelIdQuery as UserBadgesByModelIdQuery_PROD,
+  UserCreatedBadgeModelsQuery as UserCreatedBadgeModelsQuery_PROD,
+  UserBadgesChallengedQuery as UserBadgesChallengedQuery_PROD,
+  UserBadgesInReviewQuery as UserBadgesInReviewQuery_PROD,
+  UserBadgesInReviewOrChallengedQuery as UserBadgesInReviewOrChallengedQuery_PROD,
+  UserBadgesExpiringBetweenQuery as UserBadgesExpiringBetweenQuery_PROD,
 } from '@subgraph/prod/generated/subgraph'
 import { TheBadgeSDKConfig } from '@businessLogic/sdk/config'
+
+type Badge_Filter = Badge_Filter_DEV | Badge_Filter_STAGING | Badge_Filter_PROD
+type UserBadgesFilteredQuery =
+  | UserBadgesFilteredQuery_DEV
+  | UserBadgesFilteredQuery_STAGING
+  | UserBadgesFilteredQuery_PROD
+type UserQuery = UserQuery_DEV | UserQuery_STAGING | UserQuery_PROD
+type CreatorUsersIdQuery = CreatorUsersIdQuery_DEV | CreatorUsersIdQuery_STAGING | CreatorUsersIdQuery_PROD
+type UsersIdQuery = UsersIdQuery_DEV | UsersIdQuery_STAGING | UsersIdQuery_PROD
+type UserBadgesByModelIdQuery =
+  | UserBadgesByModelIdQuery_DEV
+  | UserBadgesByModelIdQuery_STAGING
+  | UserBadgesByModelIdQuery_PROD
+type UserCreatedBadgeModelsQuery =
+  | UserCreatedBadgeModelsQuery_DEV
+  | UserCreatedBadgeModelsQuery_STAGING
+  | UserCreatedBadgeModelsQuery_PROD
+type UserBadgesChallengedQuery =
+  | UserBadgesChallengedQuery_DEV
+  | UserBadgesChallengedQuery_STAGING
+  | UserBadgesChallengedQuery_PROD
+type UserBadgesInReviewQuery =
+  | UserBadgesInReviewQuery_DEV
+  | UserBadgesInReviewQuery_STAGING
+  | UserBadgesInReviewQuery_PROD
+type UserBadgesInReviewOrChallengedQuery =
+  | UserBadgesInReviewOrChallengedQuery_DEV
+  | UserBadgesInReviewOrChallengedQuery_STAGING
+  | UserBadgesInReviewOrChallengedQuery_PROD
+type UserBadgesExpiringBetweenQuery =
+  | UserBadgesExpiringBetweenQuery_DEV
+  | UserBadgesExpiringBetweenQuery_STAGING
+  | UserBadgesExpiringBetweenQuery_PROD
 
 interface UsersServiceMethods {
   getIds(searchParams?: { first: number; skip: number }): Promise<UsersIdQuery>

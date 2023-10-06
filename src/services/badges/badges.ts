@@ -1,33 +1,98 @@
 import {
-  BadgeByBadgeModelIdQuery,
-  BadgeByIdQuery,
-  BadgesByUserQuery,
-  BadgesChallengedQuery,
-  BadgesInReviewOrChallengedQuery,
-  BadgesInReviewQuery,
-  BadgeStatus,
-  BadgesUserCanReviewQuery,
-  BadgesOfUserByStatusesQuery,
-  BadgesNotOfUserByStatusesQuery,
-  Badge_Filter,
-  BadgesQuery,
-  BadgeMetadataByIdQuery,
-  BadgesMetadataUserHasChallengedQuery,
+  BadgeByBadgeModelIdQuery as BadgeByBadgeModelIdQuery_DEV,
+  BadgeByIdQuery as BadgeByIdQuery_DEV,
+  BadgesByUserQuery as BadgesByUserQuery_DEV,
+  BadgesChallengedQuery as BadgesChallengedQuery_DEV,
+  BadgesInReviewOrChallengedQuery as BadgesInReviewOrChallengedQuery_DEV,
+  BadgesInReviewQuery as BadgesInReviewQuery_DEV,
+  BadgeStatus as BadgeStatus_DEV,
+  BadgesUserCanReviewQuery as BadgesUserCanReviewQuery_DEV,
+  BadgesOfUserByStatusesQuery as BadgesOfUserByStatusesQuery_DEV,
+  BadgesNotOfUserByStatusesQuery as BadgesNotOfUserByStatusesQuery_DEV,
+  Badge_Filter as Badge_Filter_DEV,
+  BadgesQuery as BadgesQuery_DEV,
+  BadgeMetadataByIdQuery as BadgeMetadataByIdQuery_DEV,
+  BadgesMetadataUserHasChallengedQuery as BadgesMetadataUserHasChallengedQuery_DEV,
+} from '@subgraph/dev/generated/subgraph'
+import {
+  BadgeByBadgeModelIdQuery as BadgeByBadgeModelIdQuery_STAGING,
+  BadgeByIdQuery as BadgeByIdQuery_STAGING,
+  BadgesByUserQuery as BadgesByUserQuery_STAGING,
+  BadgesChallengedQuery as BadgesChallengedQuery_STAGING,
+  BadgesInReviewOrChallengedQuery as BadgesInReviewOrChallengedQuery_STAGING,
+  BadgesInReviewQuery as BadgesInReviewQuery_STAGING,
+  BadgeStatus as BadgeStatus_STAGING,
+  BadgesUserCanReviewQuery as BadgesUserCanReviewQuery_STAGING,
+  BadgesOfUserByStatusesQuery as BadgesOfUserByStatusesQuery_STAGING,
+  BadgesNotOfUserByStatusesQuery as BadgesNotOfUserByStatusesQuery_STAGING,
+  Badge_Filter as Badge_Filter_STAGING,
+  BadgesQuery as BadgesQuery_STAGING,
+  BadgeMetadataByIdQuery as BadgeMetadataByIdQuery_STAGING,
+  BadgesMetadataUserHasChallengedQuery as BadgesMetadataUserHasChallengedQuery_STAGING,
+} from '@subgraph/staging/generated/subgraph'
+import {
+  BadgeByBadgeModelIdQuery as BadgeByBadgeModelIdQuery_PROD,
+  BadgeByIdQuery as BadgeByIdQuery_PROD,
+  BadgesByUserQuery as BadgesByUserQuery_PROD,
+  BadgesChallengedQuery as BadgesChallengedQuery_PROD,
+  BadgesInReviewOrChallengedQuery as BadgesInReviewOrChallengedQuery_PROD,
+  BadgesInReviewQuery as BadgesInReviewQuery_PROD,
+  BadgeStatus as BadgeStatus_PROD,
+  BadgesUserCanReviewQuery as BadgesUserCanReviewQuery_PROD,
+  BadgesOfUserByStatusesQuery as BadgesOfUserByStatusesQuery_PROD,
+  BadgesNotOfUserByStatusesQuery as BadgesNotOfUserByStatusesQuery_PROD,
+  Badge_Filter as Badge_Filter_PROD,
+  BadgesQuery as BadgesQuery_PROD,
+  BadgeMetadataByIdQuery as BadgeMetadataByIdQuery_PROD,
+  BadgesMetadataUserHasChallengedQuery as BadgesMetadataUserHasChallengedQuery_PROD,
 } from '@subgraph/prod/generated/subgraph'
+import { ContractTransaction } from 'ethers'
 import { TheBadgeSDKConfig } from '@businessLogic/sdk/config'
-import { getFromIPFS } from '@utils/ipfs'
 import { MetadataColumn } from '@businessLogic/kleros/types'
+import { BadgeModelMetadata } from '@businessLogic/theBadge/BadgeMetadata'
+import { BackendFileResponse } from '@businessLogic/types'
+import { getFromIPFS } from '@utils/ipfs'
 import {
   createAndUploadBadgeEvidence,
   createAndUploadBadgeMetadata,
   createEvidencesValuesObject,
   encodeIpfsEvidence,
 } from '@utils/badges/mintHelpers'
-import { BadgeModelMetadata } from '@businessLogic/theBadge/BadgeMetadata'
 import { KlerosListStructure } from '@utils/kleros/generateKlerosListMetaEvidence'
-import { BackendFileResponse } from '@businessLogic/types'
-import { ContractTransaction } from 'ethers'
 import { schemaFactory } from '@utils/zod/validators'
+
+type BadgeByBadgeModelIdQuery =
+  | BadgeByBadgeModelIdQuery_DEV
+  | BadgeByBadgeModelIdQuery_STAGING
+  | BadgeByBadgeModelIdQuery_PROD
+type BadgeByIdQuery = BadgeByIdQuery_DEV | BadgeByIdQuery_STAGING | BadgeByIdQuery_PROD
+type BadgesByUserQuery = BadgesByUserQuery_DEV | BadgesByUserQuery_STAGING | BadgesByUserQuery_PROD
+type BadgesChallengedQuery = BadgesChallengedQuery_DEV | BadgesChallengedQuery_STAGING | BadgesChallengedQuery_PROD
+type BadgesInReviewOrChallengedQuery =
+  | BadgesInReviewOrChallengedQuery_DEV
+  | BadgesInReviewOrChallengedQuery_STAGING
+  | BadgesInReviewOrChallengedQuery_PROD
+type BadgesInReviewQuery = BadgesInReviewQuery_DEV | BadgesInReviewQuery_STAGING | BadgesInReviewQuery_PROD
+type BadgeStatus = BadgeStatus_DEV | BadgeStatus_STAGING | BadgeStatus_PROD
+type BadgesUserCanReviewQuery =
+  | BadgesUserCanReviewQuery_DEV
+  | BadgesUserCanReviewQuery_STAGING
+  | BadgesUserCanReviewQuery_PROD
+type BadgesOfUserByStatusesQuery =
+  | BadgesOfUserByStatusesQuery_DEV
+  | BadgesOfUserByStatusesQuery_STAGING
+  | BadgesOfUserByStatusesQuery_PROD
+type BadgesNotOfUserByStatusesQuery =
+  | BadgesNotOfUserByStatusesQuery_DEV
+  | BadgesNotOfUserByStatusesQuery_STAGING
+  | BadgesNotOfUserByStatusesQuery_PROD
+type Badge_Filter = Badge_Filter_DEV | Badge_Filter_STAGING | Badge_Filter_PROD
+type BadgesQuery = BadgesQuery_DEV | BadgesQuery_STAGING | BadgesQuery_PROD
+type BadgeMetadataByIdQuery = BadgeMetadataByIdQuery_DEV | BadgeMetadataByIdQuery_STAGING | BadgeMetadataByIdQuery_PROD
+type BadgesMetadataUserHasChallengedQuery =
+  | BadgesMetadataUserHasChallengedQuery_DEV
+  | BadgesMetadataUserHasChallengedQuery_STAGING
+  | BadgesMetadataUserHasChallengedQuery_PROD
 
 interface BadgesServiceMethods {
   get(searchParams?: { first: number; skip: number; filter?: Badge_Filter }): Promise<BadgesQuery>

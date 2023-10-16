@@ -1,7 +1,7 @@
 // subgraph URLs
 
 // Goerli
-const GOERLI_SG_URL_QA = 'https://api.thegraph.com/subgraphs/name/thebadgeadmin/thebadge-goerli-staging'
+const GOERLI_SG_URL_QA = 'https://api.studio.thegraph.com/query/51391/thebadge-goerli-staging/version/latest'
 
 // Sepolia
 const SEPOLIA_SG_URL_QA = 'https://api.studio.thegraph.com/query/51391/thebadge-sepolia-staging/version/latest'

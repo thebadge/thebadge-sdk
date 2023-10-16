@@ -1,7 +1,7 @@
 // subgraph URLs
 
 // Goerli
-const GOERLI_SG_URL_DEV = 'https://api.thegraph.com/subgraphs/name/thebadgeadmin/thebadge-goerli-dev'
+const GOERLI_SG_URL_DEV = 'https://api.studio.thegraph.com/query/51391/thebadge-goerli-dev/version/latest'
 
 // Sepolia
 const SEPOLIA_SG_URL_DEV = 'https://api.studio.thegraph.com/query/51391/thebadge-sepolia-dev/version/latest'

@@ -10,7 +10,7 @@ export const contracts = {
       [SupportedChains.sepolia]: '0x70d6b6cdB3ce3FE21EefE4F967Bb2d8e12E0F701',
       // [SupportedChains.gnosis]: 'null',
     },
-    abi: TheBadge,
+    abi: TheBadge.abi,
   },
   Kleros: {
     address: {

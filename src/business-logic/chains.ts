@@ -116,5 +116,5 @@ export function getChainsConfig(rpcProviderConfig: RPCProviderConfig): Record<Su
 
 export function getNetworkConfig(chainId: SupportedChainsValues, rpcProviderConfig: RPCProviderConfig): ChainConfig {
   const networkConfig = getChainsConfig(rpcProviderConfig)[chainId]
-  return nullthrows(networkConfig, `No config for chain id: ${chainId}`)
+  return nullthrows(networkConfig, `TheBadge SDK: No config for chain id: ${chainId}`)
 }

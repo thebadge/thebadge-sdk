@@ -47,7 +47,7 @@ import {
   BadgesMetadataUserHasChallengedQuery as BadgesMetadataUserHasChallengedQuery_PROD,
 } from '@subgraph/prod/generated/subgraph'
 import { ContractTransaction } from 'ethers'
-import { TheBadgeSDKConfig } from '@businessLogic/sdk/config'
+import { TheBadgeSDKConfig } from '../../config'
 import { MetadataColumn } from '@businessLogic/kleros/types'
 import { BadgeModelMetadata } from '@businessLogic/theBadge/BadgeMetadata'
 import { BackendFileResponse } from '@businessLogic/types'
@@ -260,7 +260,7 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     // take ipfs uri from badge object
     const ipfsDataUri = badgeResponse?.badge?.uri
     if (!ipfsDataUri) {
-      throw new Error('Missing uri for the given badge id, provide a valid badge id.')
+      throw new Error('TheBadge SDK: Missing uri for the given badge id, provide a valid badge id.')
     }
 
     // obtain badge image data
@@ -268,7 +268,7 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     const badgeImageIPFSHash = result?.content?.image?.ipfsHash
 
     if (error || !badgeImageIPFSHash) {
-      throw new Error('Error obtaining badge image data from IPFS, please retry.')
+      throw new Error('TheBadge SDK: Error obtaining badge image data from IPFS, please retry.')
     }
 
     // return badge image ipfs hash
@@ -298,7 +298,7 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     const badgeModel = badgeModelResponse.badgeModel
 
     if (!badgeModel?.uri) {
-      throw new Error('No badge model uri, please enter a valid badge model id')
+      throw new Error('TheBadge SDK: No badge model uri, please enter a valid badge model id')
     }
 
     // get ipfs data of badge model
@@ -306,7 +306,7 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
       BadgeModelMetadata<BackendFileResponse>
     >(badgeModel?.uri)
     if (badgeModelIPFSDataError) {
-      throw new Error('Error obtaining IPFS data of badge model')
+      throw new Error('TheBadge SDK: Error obtaining IPFS data of badge model')
     }
     const badgeModelIPFSData = badgeModelIPFSDataResult?.content
 
@@ -316,13 +316,13 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
 
     const registrationUri = badgeModelMetadata?.registrationUri
     if (!registrationUri) {
-      throw new Error('No badge model metadata registration uri, please enter a valid badge model id')
+      throw new Error('TheBadge SDK: No badge model metadata registration uri, please enter a valid badge model id')
     }
     const { result: registrationUriResult, error: registrationUriError } = await getFromIPFS<KlerosListStructure>(
       registrationUri,
     )
     if (registrationUriError) {
-      throw new Error('Could not obtain registration data from IPFS, please enter a valid model id')
+      throw new Error('TheBadge SDK: Could not obtain registration data from IPFS, please enter a valid model id')
     }
 
     const requiredEvidencesList = registrationUriResult?.content?.metadata?.columns as MetadataColumn[]
@@ -335,14 +335,14 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     //   throw e // TODO add custom error parsing zod error
     // }
     if (!evidencesParsedObject) {
-      throw new Error('Wrong evidences sent, please check the required evidences list')
+      throw new Error('TheBadge SDK: Wrong evidences sent, please check the required evidences list')
     }
 
     // upload evidence to IPFS
     const evidencesValues = createEvidencesValuesObject(evidencesParsedObject, requiredEvidencesList)
     const evidenceIPFSHash = await createAndUploadBadgeEvidence(requiredEvidencesList, evidencesValues)
     if (!evidenceIPFSHash) {
-      throw new Error('No evidence IPFS hash, could not upload evidence to IPFS')
+      throw new Error('TheBadge SDK: No evidence IPFS hash, could not upload evidence to IPFS')
     }
 
     // encode data for kleros minting

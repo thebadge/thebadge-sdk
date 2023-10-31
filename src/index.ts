@@ -7,7 +7,7 @@ import { BadgesService } from './services/badges/badges'
 import { BadgeModelsService } from './services/badgeModels/badgeModels'
 import { UsersService } from './services/users/users'
 import { TheBadgeSDKPermissions } from '@businessLogic/sdk/permissions'
-import { TheBadgeSDKConfig, TheBadgeSDKConfigOptions, TheBadgeSDKEnv } from '@businessLogic/sdk/config'
+import { TheBadgeSDKConfig, TheBadgeSDKConfigOptions, TheBadgeSDKEnv } from './config'
 
 type BadgeStatus = BadgeStatus_DEV | BadgeStatus_STAGING | BadgeStatus_PROD
 

@@ -9,5 +9,5 @@ import { getSubgraphUrl } from '@subgraph/common'
 export function getStagingSubgraph(chainId: SupportedChainsValues): ReturnType<typeof getStagingSdk> {
   const subgraphUrl = getSubgraphUrl(endpoints, chainId, 'staging')
   const sdkByNetworkConfig = getStagingSdk(new GraphQLClient(subgraphUrl))
-  return nullthrows(sdkByNetworkConfig, `No dev SDK for chain id ${chainId}`)
+  return nullthrows(sdkByNetworkConfig, `TheBadge SDK: No dev SDK for chain id ${chainId}`)
 }

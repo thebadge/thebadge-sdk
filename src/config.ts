@@ -11,10 +11,11 @@ import nullthrows from 'nullthrows'
 import { getDevSubgraph } from '@subgraph/dev/subgraph'
 import { getStagingSubgraph } from '@subgraph/staging/subgraph'
 import { getProdSubgraph } from '@subgraph/prod/subgraph'
-import { contracts } from '../../contracts/contracts'
-import { TheBadge__factory, TheBadge } from '../../contracts/generated/typechain'
+import { contracts } from './contracts/contracts'
+import { TheBadge__factory, TheBadge } from './contracts/generated/typechain'
 import fs from 'fs'
 import { Sdk } from '@subgraph/common'
+import * as path from 'path'
 
 export type TheBadgeSDKConfigOptions = {
   rpcProviderConfig: RPCProviderConfig
@@ -37,7 +38,10 @@ export abstract class TheBadgeSDKConfig {
   protected readonly env: TheBadgeSDKEnv
 
   protected constructor(chainId: SupportedChainsValues, config: TheBadgeSDKConfigOptions) {
-    nullthrows(TheBadgeSDKConfig.isChainSupported(chainId) ? chainId : null, `Chain ID ${chainId} is not supported`)
+    nullthrows(
+      TheBadgeSDKConfig.isChainSupported(chainId) ? chainId : null,
+      `TheBadge SDK: Chain ID ${chainId} is not supported`,
+    )
 
     const networkConfig = getNetworkConfig(chainId, config.rpcProviderConfig)
     const defaultReadOnlyProvider = new JsonRpcProvider(networkConfig?.rpcUrl, chainId)
@@ -59,7 +63,7 @@ export abstract class TheBadgeSDKConfig {
 
   protected getTBContractInstance(userAddress: string): TheBadge {
     if (!this.web3Provider) {
-      throw new Error('You need to initialize a web3Provider to perform this transaction')
+      throw new Error('TheBadge SDK: You need to initialize a web3Provider to perform this transaction')
     }
     return TheBadge__factory.connect(
       contracts.TheBadge.address[this.chainId],
@@ -68,28 +72,37 @@ export abstract class TheBadgeSDKConfig {
   }
 
   private getSubgraph(): ReturnType<Sdk> {
-    const fakeGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/fakeGeneratedSubgraph.ts')
+    let isBuild = false
+    if (fs.existsSync(path.resolve(__dirname, './subgraph/fakeGeneratedSubgraph.d.ts'))) {
+      isBuild = true
+    }
+
+    const filePath = (file: string) => {
+      return isBuild ? path.resolve(__dirname, file + '.d.ts') : path.resolve(__dirname, file + '.ts')
+    }
+
+    const fakeGeneratedSubgraphContent = fs.readFileSync(filePath('./subgraph/fakeGeneratedSubgraph'))
     let envGeneratedSubgraphContent
 
     switch (this.env) {
       case TheBadgeSDKEnv.DEVELOPMENT: // dev subgraph
-        envGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/dev/generated/subgraph.ts')
+        envGeneratedSubgraphContent = fs.readFileSync(filePath('./subgraph/dev/generated/subgraph'))
         if (envGeneratedSubgraphContent.equals(fakeGeneratedSubgraphContent)) {
-          throw new Error('No dev subgraph')
+          throw new Error('TheBadge SDK: No dev subgraph')
         }
         return getDevSubgraph(this.chainId)
 
       case TheBadgeSDKEnv.STAGING: // staging subgraph
-        envGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/staging/generated/subgraph.ts')
+        envGeneratedSubgraphContent = fs.readFileSync(filePath('./subgraph/staging/generated/subgraph'))
         if (envGeneratedSubgraphContent.equals(fakeGeneratedSubgraphContent)) {
-          throw new Error('No staging subgraph')
+          throw new Error('TheBadge SDK: No staging subgraph')
         }
         return getStagingSubgraph(this.chainId)
 
       case TheBadgeSDKEnv.PRODUCTION: // prod subgraph
-        envGeneratedSubgraphContent = fs.readFileSync('./src/subgraph/prod/generated/subgraph.ts')
+        envGeneratedSubgraphContent = fs.readFileSync(filePath('./subgraph/prod/generated/subgraph'))
         if (envGeneratedSubgraphContent.equals(fakeGeneratedSubgraphContent)) {
-          throw new Error('No prod subgraph')
+          throw new Error('TheBadge SDK: No prod subgraph')
         }
         return getProdSubgraph(this.chainId)
     }

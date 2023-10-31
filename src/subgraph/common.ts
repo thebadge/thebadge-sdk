@@ -31,7 +31,7 @@ export function codegenConfig(endpoints: object, queriesPath: string, outDir: st
 
 export function getSubgraphUrl(endpoints: object, chainId: SupportedChainsValues, env: string): string {
   let subgraphUrl = null
-  const errorMessage = `No ${env} subgraph url found for chain id ${chainId}`
+  const errorMessage = `TheBadge SDK: No ${env} subgraph url found for chain id ${chainId}`
 
   try {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

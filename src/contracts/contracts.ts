@@ -6,8 +6,8 @@ export const contracts = {
   TheBadge: {
     address: {
       // TODO check support of different envs per chain
-      [SupportedChains.goerli]: '0x5709c7f13FE36487Ebd2ed072AC9A0F43c33e86E',
-      [SupportedChains.sepolia]: '0xeCc0B0B2715bc6b6a0E42Eb9A7139aE28A360045',
+      [SupportedChains.goerli]: '0x344DEeF65b47454E2CdCe24FFCFa12f32180253B',
+      [SupportedChains.sepolia]: '0x8D6E4aa214e3eD2E895E0B6938eED63dda4c8C73',
       // [SupportedChains.gnosis]: 'null',
     },
     abi: TheBadge.abi,

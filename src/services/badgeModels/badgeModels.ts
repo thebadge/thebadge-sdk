@@ -16,7 +16,7 @@ import {
   BadgeModelsQuery as BadgeModelsQuery_PROD,
   BadgeModelMetadataByIdQuery as BadgeModelMetadataByIdQuery_PROD,
 } from '@subgraph/prod/generated/subgraph'
-import { TheBadgeSDKConfig } from '@businessLogic/sdk/config'
+import { TheBadgeSDKConfig } from '../../config'
 import { MetadataColumn } from '@businessLogic/kleros/types'
 import { getFromIPFS } from '@utils/ipfs'
 
@@ -83,14 +83,14 @@ export class BadgeModelsService extends TheBadgeSDKConfig implements BadgeModels
     const badgeModelMetadataResponse = await this.getMetadataOfBadgeModel(badgeModelId)
     const ipfsDataUri = badgeModelMetadataResponse?.badgeModelKlerosMetaData?.registrationUri
     if (!ipfsDataUri) {
-      throw new Error('Missing registrationUri for the given badge model id, provide a valid model id.')
+      throw new Error('TheBadge SDK: Missing registrationUri for the given badge model id, provide a valid model id.')
     }
 
     // obtain evidences required
     const { result, error } = await getFromIPFS<{ metadata: { columns: MetadataColumn[] } }>(ipfsDataUri)
     const evidencesList = result?.content?.metadata?.columns
     if (error || !evidencesList) {
-      throw new Error('Error obtaining required evidences list from IPFS, please retry.')
+      throw new Error('TheBadge SDK: Error obtaining required evidences list from IPFS, please retry.')
     }
 
     // return the list of evidences required

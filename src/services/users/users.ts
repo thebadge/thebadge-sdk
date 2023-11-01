@@ -37,7 +37,7 @@ import {
   UserBadgesInReviewOrChallengedQuery as UserBadgesInReviewOrChallengedQuery_PROD,
   UserBadgesExpiringBetweenQuery as UserBadgesExpiringBetweenQuery_PROD,
 } from '@subgraph/prod/generated/subgraph'
-import { TheBadgeSDKConfig } from '@businessLogic/sdk/config'
+import { TheBadgeSDKConfig } from '../../config'
 
 type Badge_Filter = Badge_Filter_DEV | Badge_Filter_STAGING | Badge_Filter_PROD
 type UserBadgesFilteredQuery =

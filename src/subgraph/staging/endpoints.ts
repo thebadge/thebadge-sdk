@@ -1,10 +1,10 @@
 // subgraph URLs
 
 // Goerli
-const GOERLI_SG_URL_QA = 'https://api.studio.thegraph.com/query/51391/thebadge-goerli-staging/1.0.14'
+const GOERLI_SG_URL_QA = 'https://api.studio.thegraph.com/query/51391/thebadge-goerli-staging/1.0.16.rc1'
 
 // Sepolia
-const SEPOLIA_SG_URL_QA = 'https://api.studio.thegraph.com/query/51391/thebadge-sepolia-staging/1.0.14'
+const SEPOLIA_SG_URL_QA = 'https://api.studio.thegraph.com/query/51391/thebadge-sepolia-staging/1.0.16.rc1'
 
 export default {
   // chainId: {

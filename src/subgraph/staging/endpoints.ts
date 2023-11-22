@@ -1,10 +1,13 @@
 // subgraph URLs
 
 // Goerli
-const GOERLI_SG_URL_QA = 'https://api.studio.thegraph.com/query/51391/thebadge-goerli-staging/1.0.16.rc1'
+const GOERLI_SG_URL_QA = 'https://api.studio.thegraph.com/query/51391/thebadge-goerli-staging/version/latest'
 
 // Sepolia
-const SEPOLIA_SG_URL_QA = 'https://api.studio.thegraph.com/query/51391/thebadge-sepolia-staging/1.0.16.rc1'
+const SEPOLIA_SG_URL_QA = 'https://api.studio.thegraph.com/query/51391/thebadge-sepolia-staging/version/latest'
+
+// Gnosis
+const GNOSIS_SG_URL_QA = 'https://api.studio.thegraph.com/query/51391/thebadge-gnosis-prod/version/latest'
 
 export default {
   // chainId: {
@@ -19,6 +22,10 @@ export default {
   11155111: {
     chainName: 'Sepolia (Ethereum testnet)',
     url: SEPOLIA_SG_URL_QA,
+  },
+  100: {
+    chainName: 'xDai (Gnosis Chain)',
+    url: GNOSIS_SG_URL_QA,
   },
   // 80001: {
   //   chainName: 'Mumbai (Polygon testnet)',

@@ -6,9 +6,9 @@ export const contracts = {
   TheBadge: {
     address: {
       // TODO check support of different envs per chain
-      [SupportedChains.goerli]: '0x344DEeF65b47454E2CdCe24FFCFa12f32180253B',
-      [SupportedChains.sepolia]: '0x8D6E4aa214e3eD2E895E0B6938eED63dda4c8C73',
-      // [SupportedChains.gnosis]: 'null',
+      [SupportedChains.goerli]: '0x4e14816A80D7c4FeEeb56C225e821c6374F4AB56',
+      [SupportedChains.sepolia]: '0x4e14816A80D7c4FeEeb56C225e821c6374F4AB56',
+      [SupportedChains.gnosis]: '0x5f90580636AE29a9E4CD2AFFCE6d73501cD594F2',
     },
     abi: TheBadge.abi,
   },
@@ -17,7 +17,7 @@ export const contracts = {
       // TODO check support of different envs per chain
       [SupportedChains.goerli]: '0x1128ed55ab2d796fa92d2f8e1f336d745354a77a', // Arbitror address
       [SupportedChains.sepolia]: '0x90992fb4e15ce0c59aeffb376460fda4ee19c879', // Arbitror address
-      // [SupportedChains.gnosis]: 'null',
+      [SupportedChains.gnosis]: '0x9C1dA9A04925bDfDedf0f6421bC7EEa8305F9002',
     },
     abi: Kleros,
   },

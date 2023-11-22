@@ -6,7 +6,7 @@ const ETH_SG_URL_PROD = 'https://api.studio.thegraph.com/query/51391/thebadge-se
 const GNOSIS_SG_URL_PROD = 'https://api.studio.thegraph.com/query/51391/thebadge-gnosis-prod/version/latest'
 
 // Polygon
-const POLYGON_SG_URL_PROD = null // TODO add Polygon subgraph prod url
+//const POLYGON_SG_URL_PROD = null // TODO add Polygon subgraph prod url
 
 export default {
   // chainId: {

@@ -14,7 +14,7 @@ describe('TheBadgeSDK', () => {
   it('should check if a chain id is supported or not', () => {
     expect(TheBadgeSDK.isChainSupported(5)).toBeTruthy() // goerli is supported
     expect(TheBadgeSDK.isChainSupported(11155111)).toBeTruthy() // sepolia is supported
-    expect(TheBadgeSDK.isChainSupported(100)).toBeFalsy() // gnosis is not yet supported
+    expect(TheBadgeSDK.isChainSupported(100)).toBeTruthy() // gnosis is supported
     expect(TheBadgeSDK.isChainSupported(42161)).toBeFalsy() // arbitrum is not supported
     expect(TheBadgeSDK.isChainSupported(56)).toBeFalsy() // bnb is not supported
   })
@@ -71,7 +71,7 @@ describe('TheBadgeSDK', () => {
   it.each([
     ['Goerli', SupportedChains.goerli, true],
     ['Sepolia', SupportedChains.sepolia, true],
-    ['Gnosis', 100, false], // not yet supported
+    ['Gnosis', SupportedChains.gnosis, true],
     ['Eth Mainnet', 1, false], // not yet supported
     ['Avalanche', 43114, false],
   ])('should check that chain %s (id: %s) is supported: %s', (chainName, chainId, isSupported) => {

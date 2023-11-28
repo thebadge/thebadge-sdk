@@ -77,4 +77,23 @@ describe('TheBadgeSDK', () => {
   ])('should check that chain %s (id: %s) is supported: %s', (chainName, chainId, isSupported) => {
     expect(TheBadgeSDK.isChainSupported(chainId)).toBe(isSupported)
   })
+
+  it('should return the badgeThirdPartyMetaData for badges properly', async () => {
+    const sdk1 = new TheBadgeSDK(SupportedChains.sepolia, { rpcProviderConfig: infuraProvider, devMode: true })
+
+    const result = await sdk1.badges.get()
+
+    let thirdPartyMetadataFound = false
+    if (result.badges.length > 0) {
+      for (const iterator of result.badges) {
+        // @ts-ignore
+        if (iterator.badgeThirdPartyMetaData && iterator.badgeThirdPartyMetaData.badgeDataUri) {
+          thirdPartyMetadataFound = true
+          break
+        }
+      }
+    }
+
+    expect(thirdPartyMetadataFound).toBeTruthy() // thirdPartyMetadata found
+  })
 })

@@ -29,9 +29,9 @@ export const providerChains: ProviderChains = {
   [RPCProvider.infura]: {
     [SupportedChains.goerli]: 'goerli',
     [SupportedChains.sepolia]: 'sepolia',
-    [SupportedChains.mumbai]: 'mumbai',
+    [SupportedChains.mumbai]: 'polygon-mumbai',
     [SupportedChains.gnosis]: 'gnosis',
-    [SupportedChains.polygon]: 'polygon',
+    [SupportedChains.polygon]: 'polygon-mainnet',
   },
   [RPCProvider.alchemy]: {
     [SupportedChains.goerli]: 'eth-goerli',

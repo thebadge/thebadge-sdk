@@ -6,12 +6,10 @@ const GOERLI_SG_URL_DEV = 'https://api.studio.thegraph.com/query/51391/thebadge-
 // Sepolia
 const SEPOLIA_SG_URL_DEV = 'https://api.studio.thegraph.com/query/51391/thebadge-sepolia-dev/version/latest'
 
-export default {
-  // chainId: {
-  //   chainName: string,
-  //   url: string,
-  // }
+// Mumbai
+const MUMBAI_SG_URL_DEV = 'https://api.studio.thegraph.com/query/51391/thebadge-mumbai-prod/version/latest'
 
+export default {
   5: {
     chainName: 'Goerli (Ethereum testnet)',
     url: GOERLI_SG_URL_DEV,
@@ -20,8 +18,8 @@ export default {
     chainName: 'Sepolia (Ethereum testnet)',
     url: SEPOLIA_SG_URL_DEV,
   },
-  // 80001: {
-  //   chainName: 'Mumbai (Polygon testnet)',
-  //   urls: POLYGON_SG_URL_DEV,
-  // },
+  80001: {
+    chainName: 'Mumbai (Polygon testnet)',
+    url: MUMBAI_SG_URL_DEV,
+  },
 }

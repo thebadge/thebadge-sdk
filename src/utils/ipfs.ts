@@ -48,10 +48,7 @@ export async function uploadToIPFS<T>(
   env: TheBadgeSDKEnv,
 ): Promise<BackendResponse<{ ipfsHash: string; s3Url: string }>> {
   const apiUrl = env === TheBadgeSDKEnv.PRODUCTION ? THE_BADGE_IPFS_URL_PROD : THE_BADGE_IPFS_URL_STAGING
-  const res = await axios.post<BackendResponse<{ ipfsHash: string; s3Url: string }>>(
-    `${apiUrl}/api/ipfs/pin`,
-    metadata,
-  )
+  const res = await axios.post<BackendResponse<{ ipfsHash: string; s3Url: string }>>(`${apiUrl}/api/ipfs/pin`, metadata)
   return res.data
 }
 

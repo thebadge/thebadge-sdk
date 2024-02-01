@@ -264,7 +264,7 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     }
 
     // obtain badge image data
-    const { result, error } = await getFromIPFS<{ image: { ipfsHash: string } }>(ipfsDataUri)
+    const { result, error } = await getFromIPFS<{ image: { ipfsHash: string } }>(ipfsDataUri, this.env)
     const badgeImageIPFSHash = result?.content?.image?.ipfsHash
 
     if (error || !badgeImageIPFSHash) {
@@ -304,7 +304,7 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     // get ipfs data of badge model
     const { result: badgeModelIPFSDataResult, error: badgeModelIPFSDataError } = await getFromIPFS<
       BadgeModelMetadata<BackendFileResponse>
-    >(badgeModel?.uri)
+    >(badgeModel?.uri, this.env)
     if (badgeModelIPFSDataError) {
       throw new Error('TheBadge SDK: Error obtaining IPFS data of badge model')
     }
@@ -320,6 +320,7 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     }
     const { result: registrationUriResult, error: registrationUriError } = await getFromIPFS<KlerosListStructure>(
       registrationUri,
+      this.env,
     )
     if (registrationUriError) {
       throw new Error('TheBadge SDK: Could not obtain registration data from IPFS, please enter a valid model id')
@@ -340,7 +341,7 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
 
     // upload evidence to IPFS
     const evidencesValues = createEvidencesValuesObject(evidencesParsedObject, requiredEvidencesList)
-    const evidenceIPFSHash = await createAndUploadBadgeEvidence(requiredEvidencesList, evidencesValues)
+    const evidenceIPFSHash = await createAndUploadBadgeEvidence(requiredEvidencesList, evidencesValues, this.env)
     if (!evidenceIPFSHash) {
       throw new Error('TheBadge SDK: No evidence IPFS hash, could not upload evidence to IPFS')
     }
@@ -356,6 +357,7 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
       badgeModelIPFSData as BadgeModelMetadata,
       userAddress,
       { imageBase64File: base64PreviewImage },
+      this.env,
     )
 
     // mint badge

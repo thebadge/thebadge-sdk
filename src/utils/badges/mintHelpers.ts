@@ -1,9 +1,10 @@
 import { convertHashToValidIPFSKlerosHash, uploadToIPFS } from '@utils/ipfs'
-import { THE_BADGE_DAPP_URL } from '@utils/constants'
+import { THE_BADGE_DAPP_URL_PROD, THE_BADGE_DAPP_URL_STAGING } from '@utils/constants'
 import { BadgeEvidenceMetadata, BadgeMetadata, BadgeModelMetadata } from '@businessLogic/theBadge/BadgeMetadata'
 import { BackendFileUpload } from '@businessLogic/types'
 import { MetadataColumn } from '@businessLogic/kleros/types'
 import { defaultAbiCoder } from 'ethers/lib/utils'
+import { TheBadgeSDKEnv } from '../../config'
 
 export async function createAndUploadBadgeMetadata(
   badgeModelMetadata: BadgeModelMetadata,
@@ -11,17 +12,22 @@ export async function createAndUploadBadgeMetadata(
   additionalArgs: {
     imageBase64File: string
   },
+  env: TheBadgeSDKEnv,
 ) {
-  const badgeMetadataIPFSUploaded = await uploadToIPFS<BadgeMetadata<BackendFileUpload>>({
-    attributes: {
-      name: badgeModelMetadata?.name || '',
-      description: badgeModelMetadata?.description || '',
-      external_link: `${THE_BADGE_DAPP_URL}/profile/${minterAddress}`,
-      attributes: [],
-      image: { mimeType: 'image/png', base64File: additionalArgs.imageBase64File },
+  const dappUrl = env === TheBadgeSDKEnv.PRODUCTION ? THE_BADGE_DAPP_URL_PROD : THE_BADGE_DAPP_URL_STAGING
+  const badgeMetadataIPFSUploaded = await uploadToIPFS<BadgeMetadata<BackendFileUpload>>(
+    {
+      attributes: {
+        name: badgeModelMetadata?.name || '',
+        description: badgeModelMetadata?.description || '',
+        external_link: `${dappUrl}/profile/${minterAddress}`,
+        attributes: [],
+        image: { mimeType: 'image/png', base64File: additionalArgs.imageBase64File },
+      },
+      filePaths: ['image'],
     },
-    filePaths: ['image'],
-  })
+    env,
+  )
 
   return `ipfs://${badgeMetadataIPFSUploaded.result?.ipfsHash}`
 }
@@ -29,16 +35,20 @@ export async function createAndUploadBadgeMetadata(
 export async function createAndUploadBadgeEvidence(
   columns: MetadataColumn[],
   values: Record<string, unknown>,
+  env: TheBadgeSDKEnv,
 ): Promise<string> {
   const filePaths = getFilePathsFromValues(values)
-  const evidenceIPFSUploaded = await uploadToIPFS<BadgeEvidenceMetadata>({
-    attributes: {
-      columns,
-      values,
-      submittedAt: Date.now(),
+  const evidenceIPFSUploaded = await uploadToIPFS<BadgeEvidenceMetadata>(
+    {
+      attributes: {
+        columns,
+        values,
+        submittedAt: Date.now(),
+      },
+      filePaths: filePaths,
     },
-    filePaths: filePaths,
-  })
+    env,
+  )
 
   const ipfsHash = evidenceIPFSUploaded.result?.ipfsHash
   if (!ipfsHash) {

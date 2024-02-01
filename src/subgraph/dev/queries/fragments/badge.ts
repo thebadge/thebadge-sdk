@@ -6,15 +6,28 @@ gql`
     status
     uri
     validUntil
+    createdTxHash
+    contractAddress
+    claimedAt
+    claimedTxHash
+    createdAt
+    createdTxHash
+    networkName
     account {
       id
     }
     badgeModel {
       id
+      uri
+      contractAddress
     }
     badgeKlerosMetaData {
       id
       reviewDueDate
+    }
+    badgeThirdPartyMetaData {
+      id
+      badgeDataUri
     }
   }
 `

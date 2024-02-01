@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { BackendResponse } from '@businessLogic/types'
-import { THE_BADGE_BACKEND_URL } from '@utils/constants'
+import { THE_BADGE_IPFS_URL_PROD, THE_BADGE_IPFS_URL_STAGING } from '@utils/constants'
+import { TheBadgeSDKEnv } from '../config'
 
 /**
  * Retrieves data from IPFS based on the given hash, using The Badge's backend.
@@ -8,9 +9,13 @@ import { THE_BADGE_BACKEND_URL } from '@utils/constants'
  * @template T - The type of the content data to retrieve from IPFS.
  * @template X - Additional type parameter that can be optionally provided to extend the backend response type.
  * @param {string} hash - The IPFS hash representing the content to retrieve.
+ * @param env
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
-export async function getFromIPFS<T, X = {}>(hash: string): Promise<BackendResponse<{ content: T } & X>> {
+export async function getFromIPFS<T, X = {}>(
+  hash: string,
+  env: TheBadgeSDKEnv,
+): Promise<BackendResponse<{ content: T } & X>> {
   const errorResponse: BackendResponse<{ content: T } & X> = {
     error: true,
     statusCode: 404,
@@ -21,9 +26,8 @@ export async function getFromIPFS<T, X = {}>(hash: string): Promise<BackendRespo
   const cleanedHash = cleanHash(hash)
   if (!cleanedHash) return errorResponse
 
-  const response = await axios.get<BackendResponse<{ content: T } & X>>(
-    `${THE_BADGE_BACKEND_URL}/api/ipfs/${cleanedHash}`,
-  )
+  const apiUrl = env === TheBadgeSDKEnv.PRODUCTION ? THE_BADGE_IPFS_URL_PROD : THE_BADGE_IPFS_URL_STAGING
+  const response = await axios.get<BackendResponse<{ content: T } & X>>(`${apiUrl}/api/ipfs/${cleanedHash}`)
   return response.data
 }
 
@@ -37,12 +41,15 @@ type Args<T = Record<string, unknown>> = {
  * Uploads data to IPFS, using The Badge's backend.
  * @async
  * @param {attributes: Record<string, unknown>, filePaths?: string[]} metadata
+ * @param env
  */
 export async function uploadToIPFS<T>(
   metadata: Args<T>,
+  env: TheBadgeSDKEnv,
 ): Promise<BackendResponse<{ ipfsHash: string; s3Url: string }>> {
+  const apiUrl = env === TheBadgeSDKEnv.PRODUCTION ? THE_BADGE_IPFS_URL_PROD : THE_BADGE_IPFS_URL_STAGING
   const res = await axios.post<BackendResponse<{ ipfsHash: string; s3Url: string }>>(
-    `${THE_BADGE_BACKEND_URL}/api/ipfs/pin`,
+    `${apiUrl}/api/ipfs/pin`,
     metadata,
   )
   return res.data

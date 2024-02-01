@@ -87,7 +87,7 @@ export class BadgeModelsService extends TheBadgeSDKConfig implements BadgeModels
     }
 
     // obtain evidences required
-    const { result, error } = await getFromIPFS<{ metadata: { columns: MetadataColumn[] } }>(ipfsDataUri)
+    const { result, error } = await getFromIPFS<{ metadata: { columns: MetadataColumn[] } }>(ipfsDataUri, this.env)
     const evidencesList = result?.content?.metadata?.columns
     if (error || !evidencesList) {
       throw new Error('TheBadge SDK: Error obtaining required evidences list from IPFS, please retry.')

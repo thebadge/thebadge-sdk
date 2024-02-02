@@ -9,6 +9,7 @@ gql`
     creatorFee
     paused
     badgesMintedAmount
+    createdTxHash
     creator {
       id
       metadataUri

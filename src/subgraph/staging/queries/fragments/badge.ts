@@ -25,6 +25,10 @@ gql`
       id
       reviewDueDate
     }
+    badgeThirdPartyMetaData {
+      id
+      badgeDataUri
+    }
   }
 `
 

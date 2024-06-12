@@ -9,6 +9,12 @@ const SEPOLIA_SG_URL_DEV = 'https://api.studio.thegraph.com/query/51391/thebadge
 // Mumbai
 const MUMBAI_SG_URL_DEV = 'https://api.studio.thegraph.com/query/51391/thebadge-mumbai-prod/version/latest'
 
+// AVAX
+const AVAX_SG_URL_DEV = 'https://api.studio.thegraph.com/query/51391/thebadge-avax-prod/version/latest'
+
+// OPTIMISM
+const OPTIMISM_SG_URL_DEV = 'https://api.studio.thegraph.com/query/51391/thebadge-optimism-prod/version/latest'
+
 export default {
   5: {
     chainName: 'Goerli (Ethereum testnet)',
@@ -21,5 +27,13 @@ export default {
   80001: {
     chainName: 'Mumbai (Polygon testnet)',
     url: MUMBAI_SG_URL_DEV,
+  },
+  43114: {
+    chainName: 'Avalanche',
+    url: AVAX_SG_URL_DEV,
+  },
+  10: {
+    chainName: 'Optimism',
+    url: OPTIMISM_SG_URL_DEV,
   },
 }

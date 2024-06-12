@@ -8,6 +8,8 @@ export const SupportedChains = {
   mumbai: 80001,
   gnosis: 100,
   polygon: 137,
+  avax: 43114,
+  optimism: 10,
 } as const
 
 export type SupportedChainsValues = ObjectValues<typeof SupportedChains>
@@ -32,13 +34,17 @@ export const providerChains: ProviderChains = {
     [SupportedChains.mumbai]: 'polygon-mumbai',
     [SupportedChains.gnosis]: 'gnosis',
     [SupportedChains.polygon]: 'polygon-mainnet',
+    [SupportedChains.avax]: 'avalanche-mainnet',
+    [SupportedChains.optimism]: 'optimism-mainnet',
   },
   [RPCProvider.alchemy]: {
     [SupportedChains.goerli]: 'eth-goerli',
     [SupportedChains.sepolia]: 'eth-sepolia',
     [SupportedChains.mumbai]: 'mumbai',
     [SupportedChains.gnosis]: 'xDai-gnosis',
-    [SupportedChains.polygon]: 'polygon',
+    [SupportedChains.polygon]: 'polygon-mainnet',
+    [SupportedChains.avax]: 'avalanche-mainnet',
+    [SupportedChains.optimism]: 'optimism-mainnet',
   },
 }
 
@@ -131,6 +137,28 @@ export function getChainsConfig(rpcProviderConfig: RPCProviderConfig): Record<Su
       rpcUrl: getProviderUrl(SupportedChains.polygon, rpcProviderConfig),
       blockExplorerUrls: ['https://polygonscan.com/'],
       token: 'MATIC',
+      isTestnet: false,
+    },
+    [SupportedChains.avax]: {
+      id: SupportedChains.avax,
+      name: 'Avalanche',
+      shortName: 'AVAX',
+      chainId: SupportedChains.avax,
+      chainIdHex: '0xa86a',
+      rpcUrl: getProviderUrl(SupportedChains.avax, rpcProviderConfig),
+      blockExplorerUrls: ['https://snowtrace.io/'],
+      token: 'AVAX',
+      isTestnet: false,
+    },
+    [SupportedChains.optimism]: {
+      id: SupportedChains.optimism,
+      name: 'Optimism',
+      shortName: 'OPT',
+      chainId: SupportedChains.avax,
+      chainIdHex: '0xa',
+      rpcUrl: getProviderUrl(SupportedChains.optimism, rpcProviderConfig),
+      blockExplorerUrls: ['https://optimistic.etherscan.io/'],
+      token: 'OETH',
       isTestnet: false,
     },
     // [SupportedChains.mainnet]: {

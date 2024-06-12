@@ -15,6 +15,12 @@ const GNOSIS_SG_URL_QA = 'https://api.studio.thegraph.com/query/51391/thebadge-g
 // Polygon
 const POLYGON_SG_URL_QA = 'https://api.studio.thegraph.com/query/51391/thebadge-polygon-prod/version/latest'
 
+// AVAX
+const AVAX_SG_URL_QA = 'https://api.studio.thegraph.com/query/51391/thebadge-avax-prod/version/latest'
+
+// OPTIMISM
+const OPTIMISM_SG_URL_QA = 'https://api.studio.thegraph.com/query/51391/thebadge-optimism-prod/version/latest'
+
 export default {
   5: {
     chainName: 'Goerli (Ethereum testnet)',
@@ -35,5 +41,13 @@ export default {
   137: {
     chainName: 'Matic (Polygon)',
     url: POLYGON_SG_URL_QA,
+  },
+  43114: {
+    chainName: 'Avalanche',
+    url: AVAX_SG_URL_QA,
+  },
+  10: {
+    chainName: 'Optimism',
+    url: OPTIMISM_SG_URL_QA,
   },
 }

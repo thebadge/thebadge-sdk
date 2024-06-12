@@ -73,7 +73,8 @@ describe('TheBadgeSDK', () => {
     ['Sepolia', SupportedChains.sepolia, true],
     ['Gnosis', SupportedChains.gnosis, true],
     ['Eth Mainnet', 1, false], // not yet supported
-    ['Avalanche', 43114, false],
+    ['Avalanche', 43114, true],
+    ['Optimism', 10, true],
   ])('should check that chain %s (id: %s) is supported: %s', (chainName, chainId, isSupported) => {
     expect(TheBadgeSDK.isChainSupported(chainId)).toBe(isSupported)
   })

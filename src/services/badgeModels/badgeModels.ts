@@ -98,10 +98,9 @@ export class BadgeModelsService extends TheBadgeSDKConfig implements BadgeModels
     }
 
     // obtain evidences required
-    const { result, error } = await getFromIPFS<BadgeModelKlerosMetadata>(evidencesListIpfsHash, this.env)
+    const { result, error } = await getFromIPFS(evidencesListIpfsHash, this.env)
 
-    // @ts-ignore
-    const evidencesList = result?.content?.metadata.columns
+    const evidencesList = (result as BadgeModelKlerosMetadata)?.content?.metadata.columns
 
     if (error || !evidencesList) {
       throw new Error('TheBadge SDK: Error obtaining required evidences list from IPFS, please retry.')

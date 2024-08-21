@@ -8,7 +8,7 @@
  */
 
 import { GraphQLClient } from 'graphql-request'
-import * as Dom from 'graphql-request/build/cjs/types.dom'
+import * as Dom from 'graphql-request/dist/types.dom'
 
 export function getSdk(client: GraphQLClient) {
   return {
@@ -54,7 +54,10 @@ export function getSdk(client: GraphQLClient) {
     badgeModelById(variables: any, requestHeaders?: Dom.RequestInit['headers']): Promise<any> {
       throw new Error('TheBadge SDK: Method not found')
     },
-    badgeModelMetadataById(variables: any, requestHeaders?: Dom.RequestInit['headers']): Promise<any> {
+    badgeModelKlerosMetadataById(variables: any, requestHeaders?: Dom.RequestInit['headers']): Promise<any> {
+      throw new Error('TheBadge SDK: Method not found')
+    },
+    badgeModelThirdPartyMetaDataById(variables: any, requestHeaders?: Dom.RequestInit['headers']): Promise<any> {
       throw new Error('TheBadge SDK: Method not found')
     },
     subgraphErrors(variables?: any, requestHeaders?: Dom.RequestInit['headers']): Promise<any> {

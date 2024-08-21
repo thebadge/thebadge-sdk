@@ -26,6 +26,47 @@ export enum KLEROS_LIST_TYPES {
   LONG_TEXT = 'long text',
 }
 
+export type BadgeModelKlerosMetadata = {
+  ipfsHash: string
+  ipfsUrl: string
+  s3Url: string
+  extension: string
+  content: {
+    name: string
+    title: string
+    description: string
+    rulingOptions: { titles: Record<string, string>; descriptions: Record<string, string> }
+    category: string
+    question: string
+    fileURI: {
+      ipfsHash: string
+      ipfsUrl: string
+      s3Url: string
+      extension: string
+    }
+    fileTypeExtension: string
+    evidenceDisplayInterfaceURI: string
+    dynamicScriptURI: {
+      ipfsHash: string
+      ipfsUrl: string
+      s3Url: string
+      extension: string
+    }
+    dynamicScriptRequiredParams: string[]
+    metadata: {
+      tcrTitle: string
+      tcrDescription: string
+      columns: MetadataColumn[]
+      itemName: string
+      itemNamePlural: string
+      logoURI: string
+      requireRemovalEvidence: boolean
+      isTCRofTCRs: boolean
+      relTcrDisabled: boolean
+    }
+  }
+}
+
 export type MetadataColumn = {
   label: string
   description: string

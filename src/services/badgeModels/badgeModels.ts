@@ -20,7 +20,7 @@ import {
   BadgeModelThirdPartyMetaDataByIdQuery as BadgeModelThirdPartyMetaDataByIdQuery_PROD,
 } from '@subgraph/prod/generated/subgraph'
 import { TheBadgeSDKConfig } from '../../config'
-import { MetadataColumn, ThirdPartyMetadataColumn } from '@businessLogic/kleros/types'
+import { BadgeModelKlerosMetadata, MetadataColumn, ThirdPartyMetadataColumn } from '@businessLogic/kleros/types'
 import { getFromIPFS } from '@utils/ipfs'
 
 type BadgeModel_Filter = BadgeModel_Filter_DEV | BadgeModel_Filter_STAGING | BadgeModel_Filter_PROD
@@ -90,55 +90,72 @@ export class BadgeModelsService extends TheBadgeSDKConfig implements BadgeModels
     }
   }
 
+  private async getKlerosEvidenceRequirementsOfBadgeModel(
+    evidencesListIpfsHash?: string,
+  ): Promise<Array<MetadataColumn>> {
+    if (!evidencesListIpfsHash) {
+      throw new Error('TheBadge SDK: Missing registrationUri for the given badge model id, provide a valid model id.')
+    }
+
+    // obtain evidences required
+    const { result, error } = await getFromIPFS(evidencesListIpfsHash, this.env)
+
+    const evidencesList = (result as BadgeModelKlerosMetadata)?.content?.metadata.columns
+
+    if (error || !evidencesList) {
+      throw new Error('TheBadge SDK: Error obtaining required evidences list from IPFS, please retry.')
+    }
+
+    return evidencesList
+  }
+
+  private async getThirdPartyEvidenceRequirementsOfBadgeModel(
+    evidencesListIpfsHash?: string,
+  ): Promise<Array<ThirdPartyMetadataColumn>> {
+    if (!evidencesListIpfsHash) {
+      throw new Error('TheBadge SDK: Missing registrationUri for the given badge model id, provide a valid model id.')
+    }
+
+    // obtain evidences required
+    const { result, error } = await getFromIPFS<{
+      requirementsColumns: ThirdPartyMetadataColumn[]
+    }>(evidencesListIpfsHash, this.env)
+
+    const evidencesList = result?.content?.requirementsColumns
+
+    if (error || !evidencesList) {
+      throw new Error('TheBadge SDK: Error obtaining required evidences list from IPFS, please retry.')
+    }
+
+    return evidencesList
+  }
+
   /**
    * Get evidence requirements of a badge model giving its id
    *
    * @param badgeModelId
    * @returns Array<MetadataColumn>
    */
-  public async getEvidenceRequirementsOfBadgeModel(
-    badgeModelId: string,
-  ): Promise<Array<MetadataColumn | ThirdPartyMetadataColumn>> {
+  public async getEvidenceRequirementsOfBadgeModel(badgeModelId: string): Promise<Array<MetadataColumn>> {
     // take ipfs uri from metadata of the badge model
+    let evidencesList
+
     const badgeModelMetadataResponse = await this.getMetadataOfBadgeModel(badgeModelId)
-    if ('badgeModelKlerosMetaData' in badgeModelMetadataResponse) {
-      const ipfsDataUri = badgeModelMetadataResponse?.badgeModelKlerosMetaData?.registrationUri
-      if (!ipfsDataUri) {
-        throw new Error('TheBadge SDK: Missing registrationUri for the given badge model id, provide a valid model id.')
-      }
-
-      // obtain evidences required
-      const { result, error } = await getFromIPFS<{ columns: MetadataColumn[] }>(ipfsDataUri, this.env)
-      const evidencesList = result?.content?.columns
-      if (error || !evidencesList) {
-        throw new Error('TheBadge SDK: Error obtaining required evidences list from IPFS, please retry.')
-      }
-
-      // return the list of evidences required
-      return evidencesList
-    }
     if ('badgeModelThirdPartyMetaData' in badgeModelMetadataResponse) {
-      const ipfsDataUri = badgeModelMetadataResponse?.badgeModelThirdPartyMetaData?.requirementsIPFSHash
-      if (!ipfsDataUri) {
-        throw new Error(
-          'TheBadge SDK: Missing requirementsIPFSHash for the given badge model id, provide a valid model id.',
-        )
-      }
-
-      // obtain evidences required
-      const { result, error } = await getFromIPFS<{
-        columns: ThirdPartyMetadataColumn[]
-      }>(ipfsDataUri, this.env)
-
-      const evidencesList = result?.content?.columns
-      if (error || !evidencesList) {
-        throw new Error('TheBadge SDK: Error obtaining required evidences list from IPFS, please retry.')
-      }
-
-      // return the list of evidences required
-      return evidencesList
+      evidencesList = await this.getThirdPartyEvidenceRequirementsOfBadgeModel(
+        badgeModelMetadataResponse?.badgeModelThirdPartyMetaData?.requirementsIPFSHash,
+      )
+    }
+    if ('badgeModelKlerosMetaData' in badgeModelMetadataResponse) {
+      evidencesList = await this.getKlerosEvidenceRequirementsOfBadgeModel(
+        badgeModelMetadataResponse?.badgeModelKlerosMetaData?.registrationUri,
+      )
     }
 
-    throw new Error('TheBadge SDK: Error obtaining required evidences for given badgeModelId.')
+    if (!evidencesList) {
+      throw new Error('TheBadge SDK: Error obtaining required evidences list from IPFS, please retry.')
+    }
+
+    return evidencesList
   }
 }

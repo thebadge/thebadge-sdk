@@ -40,4 +40,18 @@ describe('BadgeModelsService', () => {
     expect('get' in badgeModelsService).toBeTruthy()
     expect('notExistingMethod' in badgeModelsService).toBeFalsy()
   })
+  it('should return the evidences list for tpBadgeModel', async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const badgeModelsService = new BadgeModelsService(11155111, {
+      rpcProviderConfig: { name: RPCProvider.infura, apiKey: '' },
+    })
+
+    const metadata = await badgeModelsService.getEvidenceRequirementsOfBadgeModel(2)
+
+    expect(metadata.length).toBe(1)
+    expect(badgeModelsService).not.toBeUndefined()
+    expect('get' in badgeModelsService).toBeTruthy()
+    expect('notExistingMethod' in badgeModelsService).toBeFalsy()
+  })
 })

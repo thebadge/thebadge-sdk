@@ -1,6 +1,6 @@
 {
   "name": "@thebadge/sdk",
-  "version": "0.2.15",
+  "version": "0.2.16",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.es.js",

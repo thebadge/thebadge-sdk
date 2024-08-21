@@ -20,10 +20,26 @@ gql`
 gql`
   fragment BadgeModelKlerosMetadata on BadgeModelKlerosMetaData {
     id
+    admin
+    arbitrator
+    challengePeriodDuration
+    governor
     registrationUri
     removalUri
-    tcrList
     submissionBaseDeposit
+    tcrList
+  }
+`
+
+gql`
+  fragment BadgeModelThirdPartyMetaData on BadgeModelThirdPartyMetaData {
+    id
+    admin
+    arbitrator
     challengePeriodDuration
+    governor
+    requirementsIPFSHash
+    submissionBaseDeposit
+    tcrList
   }
 `

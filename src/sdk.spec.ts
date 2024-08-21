@@ -8,7 +8,7 @@ describe('TheBadgeSDK', () => {
   let sampleSDK: TheBadgeSDK
 
   beforeEach(() => {
-    sampleSDK = new TheBadgeSDK(5, { rpcProviderConfig: infuraProvider })
+    sampleSDK = new TheBadgeSDK(11155111, { rpcProviderConfig: infuraProvider })
   })
 
   it('should check if a chain id is supported or not', () => {
@@ -20,8 +20,8 @@ describe('TheBadgeSDK', () => {
   })
 
   it('should initialize a TheBadgeSDK instance correctly', () => {
-    const sdk1 = new TheBadgeSDK(5, { rpcProviderConfig: infuraProvider })
-    expect(sdk1.getChainId()).toBe(5)
+    const sdk1 = new TheBadgeSDK(11155111, { rpcProviderConfig: infuraProvider })
+    expect(sdk1.getChainId()).toBe(11155111)
     expect(sdk1.getRPCProviderName()).toBe(RPCProvider.infura)
     expect(sdk1.getEnv()).toBe(TheBadgeSDKEnv.STAGING)
     expect(sdk1.getWeb3Provider()).toBeUndefined()
@@ -35,12 +35,12 @@ describe('TheBadgeSDK', () => {
     expect(sdk2.getPermissions()).toBe(TheBadgeSDKPermissions.READ_ONLY)
 
     const web3ProviderSample = new Web3Provider(() => Promise.resolve(null))
-    const sdk3 = new TheBadgeSDK(5, {
+    const sdk3 = new TheBadgeSDK(11155111, {
       rpcProviderConfig: alchemyProvider,
       web3Provider: web3ProviderSample,
       devMode: true,
     })
-    expect(sdk3.getChainId()).toBe(5)
+    expect(sdk3.getChainId()).toBe(11155111)
     expect(sdk3.getRPCProviderName()).toBe(RPCProvider.alchemy)
     expect(sdk3.getEnv()).toBe(TheBadgeSDKEnv.DEVELOPMENT)
     expect(sdk3.getWeb3Provider()).not.toBeUndefined()

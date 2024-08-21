@@ -54,7 +54,10 @@ export function getSdk(client: GraphQLClient) {
     badgeModelById(variables: any, requestHeaders?: Dom.RequestInit['headers']): Promise<any> {
       throw new Error('TheBadge SDK: Method not found')
     },
-    badgeModelMetadataById(variables: any, requestHeaders?: Dom.RequestInit['headers']): Promise<any> {
+    badgeModelKlerosMetadataById(variables: any, requestHeaders?: Dom.RequestInit['headers']): Promise<any> {
+      throw new Error('TheBadge SDK: Method not found')
+    },
+    badgeModelThirdPartyMetaDataById(variables: any, requestHeaders?: Dom.RequestInit['headers']): Promise<any> {
       throw new Error('TheBadge SDK: Method not found')
     },
     subgraphErrors(variables?: any, requestHeaders?: Dom.RequestInit['headers']): Promise<any> {

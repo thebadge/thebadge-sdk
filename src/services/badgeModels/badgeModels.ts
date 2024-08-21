@@ -2,22 +2,25 @@ import {
   BadgeModel_Filter as BadgeModel_Filter_DEV,
   BadgeModelByIdQuery as BadgeModelByIdQuery_DEV,
   BadgeModelsQuery as BadgeModelsQuery_DEV,
-  BadgeModelMetadataByIdQuery as BadgeModelMetadataByIdQuery_DEV,
+  BadgeModelKlerosMetadataByIdQuery as BadgeModelMetadataByIdQuery_DEV,
+  BadgeModelThirdPartyMetaDataByIdQuery as BadgeModelThirdPartyMetaDataByIdQuery_DEV,
 } from '@subgraph/dev/generated/subgraph'
 import {
   BadgeModel_Filter as BadgeModel_Filter_STAGING,
   BadgeModelByIdQuery as BadgeModelByIdQuery_STAGING,
   BadgeModelsQuery as BadgeModelsQuery_STAGING,
-  BadgeModelMetadataByIdQuery as BadgeModelMetadataByIdQuery_STAGING,
+  BadgeModelKlerosMetadataByIdQuery as BadgeModelMetadataByIdQuery_STAGING,
+  BadgeModelThirdPartyMetaDataByIdQuery as BadgeModelThirdPartyMetaDataByIdQuery_STAGING,
 } from '@subgraph/staging/generated/subgraph'
 import {
   BadgeModel_Filter as BadgeModel_Filter_PROD,
   BadgeModelByIdQuery as BadgeModelByIdQuery_PROD,
   BadgeModelsQuery as BadgeModelsQuery_PROD,
-  BadgeModelMetadataByIdQuery as BadgeModelMetadataByIdQuery_PROD,
+  BadgeModelKlerosMetadataByIdQuery as BadgeModelMetadataByIdQuery_PROD,
+  BadgeModelThirdPartyMetaDataByIdQuery as BadgeModelThirdPartyMetaDataByIdQuery_PROD,
 } from '@subgraph/prod/generated/subgraph'
 import { TheBadgeSDKConfig } from '../../config'
-import { MetadataColumn } from '@businessLogic/kleros/types'
+import { MetadataColumn, ThirdPartyMetadataColumn } from '@businessLogic/kleros/types'
 import { getFromIPFS } from '@utils/ipfs'
 
 type BadgeModel_Filter = BadgeModel_Filter_DEV | BadgeModel_Filter_STAGING | BadgeModel_Filter_PROD
@@ -27,6 +30,11 @@ type BadgeModelMetadataByIdQuery =
   | BadgeModelMetadataByIdQuery_DEV
   | BadgeModelMetadataByIdQuery_STAGING
   | BadgeModelMetadataByIdQuery_PROD
+
+type BadgeModelThirdPartyMetadataByIdQuery =
+  | BadgeModelThirdPartyMetaDataByIdQuery_DEV
+  | BadgeModelThirdPartyMetaDataByIdQuery_STAGING
+  | BadgeModelThirdPartyMetaDataByIdQuery_PROD
 
 interface BadgeModelsServiceMethods {
   get(searchParams?: { first: number; skip: number; filter?: BadgeModel_Filter }): Promise<BadgeModelsQuery>
@@ -68,8 +76,18 @@ export class BadgeModelsService extends TheBadgeSDKConfig implements BadgeModels
    *
    * @param badgeModelId
    */
-  async getMetadataOfBadgeModel(badgeModelId: string): Promise<BadgeModelMetadataByIdQuery> {
-    return await this.subgraph.badgeModelMetadataById({ id: badgeModelId })
+  async getMetadataOfBadgeModel(
+    badgeModelId: string,
+  ): Promise<BadgeModelMetadataByIdQuery | BadgeModelThirdPartyMetadataByIdQuery> {
+    const badgeModel = await this.getById(badgeModelId)
+    if (!badgeModel) {
+      throw new Error('TheBadge SDK: Missing BadgeModel for the given badge model id, provide a valid model id.')
+    }
+    if (badgeModel.badgeModel?.controllerType === 'thirdParty') {
+      return await this.subgraph.badgeModelThirdPartyMetaDataById({ id: badgeModelId })
+    } else {
+      return await this.subgraph.badgeModelKlerosMetadataById({ id: badgeModelId })
+    }
   }
 
   /**
@@ -78,22 +96,49 @@ export class BadgeModelsService extends TheBadgeSDKConfig implements BadgeModels
    * @param badgeModelId
    * @returns Array<MetadataColumn>
    */
-  public async getEvidenceRequirementsOfBadgeModel(badgeModelId: string): Promise<Array<MetadataColumn>> {
+  public async getEvidenceRequirementsOfBadgeModel(
+    badgeModelId: string,
+  ): Promise<Array<MetadataColumn | ThirdPartyMetadataColumn>> {
     // take ipfs uri from metadata of the badge model
     const badgeModelMetadataResponse = await this.getMetadataOfBadgeModel(badgeModelId)
-    const ipfsDataUri = badgeModelMetadataResponse?.badgeModelKlerosMetaData?.registrationUri
-    if (!ipfsDataUri) {
-      throw new Error('TheBadge SDK: Missing registrationUri for the given badge model id, provide a valid model id.')
+    if ('badgeModelKlerosMetaData' in badgeModelMetadataResponse) {
+      const ipfsDataUri = badgeModelMetadataResponse?.badgeModelKlerosMetaData?.registrationUri
+      if (!ipfsDataUri) {
+        throw new Error('TheBadge SDK: Missing registrationUri for the given badge model id, provide a valid model id.')
+      }
+
+      // obtain evidences required
+      const { result, error } = await getFromIPFS<{ columns: MetadataColumn[] }>(ipfsDataUri, this.env)
+      const evidencesList = result?.content?.columns
+      if (error || !evidencesList) {
+        throw new Error('TheBadge SDK: Error obtaining required evidences list from IPFS, please retry.')
+      }
+
+      // return the list of evidences required
+      return evidencesList
+    }
+    if ('badgeModelThirdPartyMetaData' in badgeModelMetadataResponse) {
+      const ipfsDataUri = badgeModelMetadataResponse?.badgeModelThirdPartyMetaData?.requirementsIPFSHash
+      if (!ipfsDataUri) {
+        throw new Error(
+          'TheBadge SDK: Missing requirementsIPFSHash for the given badge model id, provide a valid model id.',
+        )
+      }
+
+      // obtain evidences required
+      const { result, error } = await getFromIPFS<{
+        columns: ThirdPartyMetadataColumn[]
+      }>(ipfsDataUri, this.env)
+
+      const evidencesList = result?.content?.columns
+      if (error || !evidencesList) {
+        throw new Error('TheBadge SDK: Error obtaining required evidences list from IPFS, please retry.')
+      }
+
+      // return the list of evidences required
+      return evidencesList
     }
 
-    // obtain evidences required
-    const { result, error } = await getFromIPFS<{ metadata: { columns: MetadataColumn[] } }>(ipfsDataUri, this.env)
-    const evidencesList = result?.content?.metadata?.columns
-    if (error || !evidencesList) {
-      throw new Error('TheBadge SDK: Error obtaining required evidences list from IPFS, please retry.')
-    }
-
-    // return the list of evidences required
-    return evidencesList
+    throw new Error('TheBadge SDK: Error obtaining required evidences for given badgeModelId.')
   }
 }

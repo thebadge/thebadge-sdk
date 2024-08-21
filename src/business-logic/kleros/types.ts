@@ -32,3 +32,8 @@ export type MetadataColumn = {
   type: KLEROS_LIST_TYPES
   isIdentifier: boolean
 }
+
+export type ThirdPartyMetadataColumn = MetadataColumn & {
+  replacementKey?: string
+  isAutoFillable: boolean
+}

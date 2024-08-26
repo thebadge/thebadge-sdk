@@ -5,7 +5,7 @@ describe('BadgesService', () => {
   it('should check service initialization', () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const badgesService = new BadgesService(5, { rpcProviderConfig: { name: RPCProvider.infura, apiKey: '' } })
+    const badgesService = new BadgesService(11155111, { rpcProviderConfig: { name: RPCProvider.infura, apiKey: '' } })
     expect(badgesService).not.toBeUndefined()
     expect('get' in badgesService).toBeTruthy()
     expect('notExistingMethod' in badgesService).toBeFalsy()

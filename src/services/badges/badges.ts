@@ -311,10 +311,17 @@ export class BadgesService extends TheBadgeSDKConfig implements BadgesServiceMet
     const badgeModelIPFSData = badgeModelIPFSDataResult?.content
 
     // get badge model metadata
-    const badgeModelMetadataResponse = await this.subgraph.badgeModelMetadataById({ id: badgeModelId })
-    const badgeModelMetadata = badgeModelMetadataResponse.badgeModelKlerosMetaData
+    let registrationUri
+    if (badgeModel?.controllerType === 'thirdParty') {
+      const { badgeModelThirdPartyMetaData } = await this.subgraph.badgeModelThirdPartyMetaDataById({
+        id: badgeModelId,
+      })
+      registrationUri = badgeModelThirdPartyMetaData?.requirementsIPFSHash
+    } else {
+      const { badgeModelKlerosMetaData } = await this.subgraph.badgeModelKlerosMetadataById({ id: badgeModelId })
+      registrationUri = badgeModelKlerosMetaData?.registrationUri
+    }
 
-    const registrationUri = badgeModelMetadata?.registrationUri
     if (!registrationUri) {
       throw new Error('TheBadge SDK: No badge model metadata registration uri, please enter a valid badge model id')
     }

@@ -4,6 +4,7 @@ import {
   BadgeModelsQuery as BadgeModelsQuery_DEV,
   BadgeModelKlerosMetadataByIdQuery as BadgeModelMetadataByIdQuery_DEV,
   BadgeModelThirdPartyMetaDataByIdQuery as BadgeModelThirdPartyMetaDataByIdQuery_DEV,
+  BadgeModelByIdWithMetadataQuery as BadgeModelByIdWithMetadataQuery_DEV,
 } from '@subgraph/dev/generated/subgraph'
 import {
   BadgeModel_Filter as BadgeModel_Filter_STAGING,
@@ -11,6 +12,7 @@ import {
   BadgeModelsQuery as BadgeModelsQuery_STAGING,
   BadgeModelKlerosMetadataByIdQuery as BadgeModelMetadataByIdQuery_STAGING,
   BadgeModelThirdPartyMetaDataByIdQuery as BadgeModelThirdPartyMetaDataByIdQuery_STAGING,
+  BadgeModelByIdWithMetadataQuery as BadgeModelByIdWithMetadataQuery_STAGING,
 } from '@subgraph/staging/generated/subgraph'
 import {
   BadgeModel_Filter as BadgeModel_Filter_PROD,
@@ -18,6 +20,7 @@ import {
   BadgeModelsQuery as BadgeModelsQuery_PROD,
   BadgeModelKlerosMetadataByIdQuery as BadgeModelMetadataByIdQuery_PROD,
   BadgeModelThirdPartyMetaDataByIdQuery as BadgeModelThirdPartyMetaDataByIdQuery_PROD,
+  BadgeModelByIdWithMetadataQuery as BadgeModelByIdWithMetadataQuery_PROD,
 } from '@subgraph/prod/generated/subgraph'
 import { TheBadgeSDKConfig } from '../../config'
 import { MetadataColumn, BadgeModelKlerosMetadata, ThirdPartyMetadataColumn } from '@businessLogic/kleros/types'
@@ -26,6 +29,10 @@ import { getFromIPFS } from '@utils/ipfs'
 type BadgeModel_Filter = BadgeModel_Filter_DEV | BadgeModel_Filter_STAGING | BadgeModel_Filter_PROD
 type BadgeModelByIdQuery = BadgeModelByIdQuery_DEV | BadgeModelByIdQuery_STAGING | BadgeModelByIdQuery_PROD
 type BadgeModelsQuery = BadgeModelsQuery_DEV | BadgeModelsQuery_STAGING | BadgeModelsQuery_PROD
+type BadgeModelByIdWithMetadataQuery =
+  | BadgeModelByIdWithMetadataQuery_DEV
+  | BadgeModelByIdWithMetadataQuery_STAGING
+  | BadgeModelByIdWithMetadataQuery_PROD
 type BadgeModelMetadataByIdQuery =
   | BadgeModelMetadataByIdQuery_DEV
   | BadgeModelMetadataByIdQuery_STAGING
@@ -69,6 +76,15 @@ export class BadgeModelsService extends TheBadgeSDKConfig implements BadgeModels
    */
   async getById(badgeModelId: string): Promise<BadgeModelByIdQuery> {
     return await this.subgraph.badgeModelById({ id: badgeModelId })
+  }
+
+  /**
+   * Obtain a badge model giving its id and also contains its metadata, depending on
+   * the controllerType you would get badgeModelKleros or badgeModelThirdParty
+   * @param badgeModelId
+   */
+  async getByIdWithMetadata(badgeModelId: string): Promise<BadgeModelByIdWithMetadataQuery> {
+    return await this.subgraph.badgeModelByIdWithMetadata({ id: badgeModelId })
   }
 
   /**

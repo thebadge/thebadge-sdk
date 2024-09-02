@@ -46,6 +46,7 @@ type BadgeModelThirdPartyMetadataByIdQuery =
 interface BadgeModelsServiceMethods {
   get(searchParams?: { first: number; skip: number; filter?: BadgeModel_Filter }): Promise<BadgeModelsQuery>
   getById(badgeModelId: string): Promise<BadgeModelByIdQuery>
+  getByIdWithMetadata(badgeModelId: string): Promise<BadgeModelByIdWithMetadataQuery>
   getMetadataOfBadgeModel(badgeModelId: string): Promise<BadgeModelByIdQuery>
   getEvidenceRequirementsOfBadgeModel(badgeModelId: string): Promise<Array<MetadataColumn>>
   // create(userAddress: string, params: BadgeModelCreationParams) TODO coming soon

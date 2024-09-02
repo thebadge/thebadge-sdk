@@ -8,7 +8,7 @@
  */
 
 import { GraphQLClient } from 'graphql-request'
-import * as Dom from 'graphql-request/dist/types.dom'
+import * as Dom from 'graphql-request/build/cjs/types.dom'
 
 export function getSdk(client: GraphQLClient) {
   return {

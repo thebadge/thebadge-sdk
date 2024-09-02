@@ -15,3 +15,17 @@ export const BADGE_MODEL_BY_ID = gql`
     }
   }
 `
+
+export const BADGE_MODEL_BY_ID_WITH_METADATA = gql`
+  query badgeModelByIdWithMetadata($id: ID!) {
+    badgeModel(id: $id) {
+      ...BadgeModel
+      badgeModelKleros {
+        ...BadgeModelKlerosMetadata
+      }
+      badgeModelThirdParty {
+        ...BadgeModelThirdPartyMetaData
+      }
+    }
+  }
+`
